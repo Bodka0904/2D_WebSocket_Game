@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/gido/2D_WebSocket_Game/server/db"
 	"github.com/gido/2D_WebSocket_Game/server/module"
@@ -11,25 +11,25 @@ func main() {
 
 	err := db.InitDB()
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal("Can not Init Database: ", err)
 	}
 
 	err = db.CreateDbTable(db.Database)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal("Can not Init Database: ", err)
 	}
 	err = db.CreateInventoryTable(db.Database)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal("Can not create InventoryTable: ", err)
 	}
-	err = db.AddNewInventorySlot(db.Database, "123")
+	err = db.AddToInventory(db.Database, "123", "")
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal("Can not Add To Inventory: ", err)
 	}
 	//db.LoginPlayer(db.Database, "test", "test")
 	//db.DeleteDbTable(db.Database)
 
 	module.Hubb.Init()
-	module.StartApi()
+	module.StartAPI()
 
 }

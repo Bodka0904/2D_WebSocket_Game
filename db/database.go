@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -61,8 +62,8 @@ func CreateDbTable(DB *sql.DB) error {
 		"password" TEXT NOT NULL,
 		"id" character varying(50) UNIQUE,
 		"playername" character varying(50),
-		"positionX" float,
-		"positionY" float,
+		"posx" float DEFAULT 250,
+		"posy" float DEFAULT 250,
 		"world" character varying(50)
 	)`)
 	if err != nil {
@@ -104,7 +105,7 @@ func DeleteInventory(DB *sql.DB, ID string) error {
 	return nil
 }
 
-func RegisterPlayer(DB *sql.DB, username string, password string, ID string) error {
+func RegisterPlayer(DB *sql.DB, username string, password string, player PlayerInfo) error {
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 8)
 	if err != nil {
@@ -114,7 +115,7 @@ func RegisterPlayer(DB *sql.DB, username string, password string, ID string) err
 
 	query := `INSERT INTO users(username,password,id) VALUES ($1,$2,$3)`
 
-	_, err = DB.Exec(query, username, hashedPassword, ID)
+	_, err = DB.Exec(query, username, hashedPassword, player.ID)
 	if err != nil {
 		fmt.Println(err)
 		return err
@@ -126,43 +127,39 @@ func RegisterPlayer(DB *sql.DB, username string, password string, ID string) err
 func LoginPlayer(DB *sql.DB, username string, password string) (authorized bool, player PlayerInfo) {
 
 	var hashed_pass string
-	fmt.Println(player)
+
 	err := DB.QueryRow("SELECT password FROM users WHERE username = $1", username).Scan(&hashed_pass)
 	if err != nil {
-		fmt.Println("Could not parse password")
+		log.Fatal("Could not parse password")
+		return false, PlayerInfo{}
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(hashed_pass), []byte(password))
 	if err != nil {
-		fmt.Println("Unauthorized")
+		log.Fatal("Unauthorized")
 		return false, PlayerInfo{}
 	}
-	fmt.Println("Logged in")
 
 	err = DB.QueryRow("SELECT id FROM users WHERE username = $1", username).Scan(&player.ID)
 	if err != nil {
-		fmt.Println("Could not parse id")
+		log.Fatal("Could not parse id ", err)
 		return false, PlayerInfo{}
 	}
-	err = DB.QueryRow("SELECT positionX FROM users WHERE username = $1", username).Scan(&player.PosX)
+	err = DB.QueryRow("SELECT posx FROM users WHERE username = $1", username).Scan(&player.PosX)
 	if err != nil {
-		fmt.Println("Could not parse positionX")
+		log.Fatal("Could not parse posx", err)
 		return false, PlayerInfo{}
 	}
-	err = DB.QueryRow("SELECT id FROM users WHERE username = $1", username).Scan(&player.PosY)
+	err = DB.QueryRow("SELECT posy FROM users WHERE username = $1", username).Scan(&player.PosY)
 	if err != nil {
-		fmt.Println("Could not parse positionY")
+		log.Fatal("Could not parse posy ", err)
 		return false, PlayerInfo{}
 	}
-
 	return true, player
 
 }
 
-func CheckIfValid(DB *sql.DB) {
-
-}
-
+//CreateInventoryTable create new Inventory Table shared accross all players, every slot has ID of player
 func CreateInventoryTable(DB *sql.DB) error {
 
 	_, err := DB.Exec(`CREATE TABLE IF NOT EXISTS "public"."inventory"(
@@ -173,18 +170,19 @@ func CreateInventoryTable(DB *sql.DB) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("Inventory Created")
+	log.Println("Inventory Created")
 
 	return nil
 }
 
-func AddNewInventorySlot(DB *sql.DB, ID string) error {
+//AddToInventory add new item to inventory , need ID of player, and name of Item
+func AddToInventory(DB *sql.DB, ID string, Item string) error {
 	query := `INSERT INTO inventory(playerid,slot) VALUES ($1, $2)`
 
-	_, err := DB.Exec(query, ID, "")
+	_, err := DB.Exec(query, ID, Item)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
+	log.Println("Item: " + Item + " added to inventory of player with ID: " + ID)
 	return nil
 }

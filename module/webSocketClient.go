@@ -1,7 +1,7 @@
 package module
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -17,16 +17,18 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
+//WsClient ws connection and player
 type WsClient struct {
 	Connection *websocket.Conn
 	Player     Player
 }
 
+//SendData Every Client sends data about every registered player
 func (wsClient *WsClient) SendData() {
 
 	for {
 
-		players := Hubb.getPlayers() //Stores memory addresses of our players
+		players := Hubb.GetPlayers() //Stores memory addresses of our players
 		time.Sleep(25 * time.Millisecond)
 
 		err := wsClient.Connection.WriteJSON(players)
@@ -39,6 +41,7 @@ func (wsClient *WsClient) SendData() {
 	}
 }
 
+//GetData Every Client get data about his player
 func (wsClient *WsClient) GetData() {
 
 	for {
@@ -56,19 +59,27 @@ func (wsClient *WsClient) GetData() {
 	}
 }
 
+//ServeWs It creates and stores clients after socket connection is made
 func ServeWs(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 
 	}
 
-	wsClient := &WsClient{Connection: conn}
-	router.HandleFunc("/loginHandler", wsClient.LoginHandler).Methods("POST")
+	wsClient := &WsClient{Connection: conn, Player: Player{ID: "", Position: Position{}, Velocity: Velocity{X: 3, Y: 3}}}
 
+	//Get Init message for client Player
+	err = wsClient.Connection.ReadJSON(&wsClient.Player)
+	if err != nil {
+		log.Fatal(err)
+	}
+	//Register Client and his player
 	Hubb.RegisterClient(wsClient)
 
+	//Send data about all players
 	go wsClient.SendData()
-	go wsClient.GetData()
 
+	//Recieve data from client about particular player
+	go wsClient.GetData()
 }

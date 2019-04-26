@@ -6,8 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="/client/css/style.css">
     <title>Document</title>
-    <script src="/client/js/player.js"></script>
+
+    <!--Create WebSocket connection after client log in and is redirected to the World--> 
+    <script>let ws = new WebSocket("ws://localhost:3000/ws")</script> 
+    
+    <script src="client/js/main.js"></script>
     <script src="/client/js/setup.js"></script>
+    <script src="/client/js/player.js"></script>
     <script src="/client/js/websockets.js"></script>
 
 </head>
@@ -17,31 +22,8 @@
 
     <script>
 
-
-
-        setup.InitGL()
-        setup.Load()
-
-
-        setInterval(function () {
-
-            // Clear Canvas
-            setup.gl.clearRect(0, 0, 500, 500)
-            setup.DrawMap()
-
-
-
-
-            if (serverData != null && setup.player_list.length != 0) {
-
-                for (var i = 0; i < setup.player_list.length; i++) {
-                    setup.player_list[i].Skin = setup.Skin.warrior
-                    setup.player_list[i].Draw(setup.gl)
-                }
-            }
-        }, 15);
-
-
+        Init()
+        GameLoop()
 
     </script>
 </body>

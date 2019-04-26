@@ -1,19 +1,23 @@
 package module
 
-import "fmt"
+import (
+	"log"
+)
 
+//Hub holds all Clients
 type Hub struct {
 	Clients map[*WsClient]bool
 }
 
+//Init inits Hub client map
 func (h *Hub) Init() {
 	h.Clients = make(map[*WsClient]bool)
-
 }
 
 var Hubb = &Hub{}
 
-func (h *Hub) getClients() []*WsClient {
+// GetClients get array of all clients
+func (h *Hub) GetClients() []*WsClient {
 	keys := make([]*WsClient, 0, len(h.Clients))
 
 	for k := range h.Clients {
@@ -23,7 +27,8 @@ func (h *Hub) getClients() []*WsClient {
 	return keys
 }
 
-func (h *Hub) getPlayers() []*Player {
+// GetPlayers get array of all players
+func (h *Hub) GetPlayers() []*Player {
 	keys := make([]*Player, 0, len(h.Clients))
 
 	for k := range h.Clients {
@@ -33,16 +38,18 @@ func (h *Hub) getPlayers() []*Player {
 	return keys
 }
 
+// RegisterClient ...
 func (h *Hub) RegisterClient(c *WsClient) {
 	h.Clients[c] = true
-	fmt.Println("New client registered", c.Connection.RemoteAddr())
+	log.Println("New client registered ", c.Connection.RemoteAddr())
 }
 
+// UnregisterClient ...
 func (h *Hub) UnregisterClient(c *WsClient) {
 	_, ok := h.Clients[c]
 	if ok == true {
 		delete(h.Clients, c)
-		fmt.Println("Client unregistered", c.Connection.RemoteAddr())
+		log.Println("Client unregistered ", c.Connection.RemoteAddr())
 	}
 	return
 }

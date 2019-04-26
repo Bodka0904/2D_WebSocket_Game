@@ -40,7 +40,7 @@ class Setup {
     }
 
     AddPlayer(serverData) {
-        console.log(serverData.length)
+        
         if (this.player_list.length == 0) {
             //Add first player - client
             this.player_list.push(new Player("", 250, 250, "", serverData[serverData.length - 1].ID))

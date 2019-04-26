@@ -1,13 +1,30 @@
-let ws = new WebSocket("ws://localhost:3000/ws")
+
 let setup = new Setup()
 let serverData = null
+
+
+//Function to get params from URL
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]([^=#]+)=([^&#]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+
 
 ws.onopen = () => {
 
     console.log("Connected")
-
+    var params = getUrlVars()
+   
+    //Send params from URL sent by server back to server to Init client player
+    var X = parseFloat(params.PosX)
+    var Y = parseFloat(params.PosY)
+    ws.send(JSON.stringify({ID:params.ID,Position:{X:X,Y:Y}}))
+   
+    
 }
-
 
 ws.onmessage = (msg) => {
     serverData = JSON.parse(msg.data)
@@ -15,7 +32,6 @@ ws.onmessage = (msg) => {
     // Control how many player position server sends and handle it
     setup.AddPlayer(serverData)
     setup.DeletePlayer(serverData)
-    console.log(serverData)
     
     if (setup.player_list.length != 0) {
 
