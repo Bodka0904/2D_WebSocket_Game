@@ -1,4 +1,3 @@
-
 let setup = new Setup()
 let serverData = null
 
@@ -21,14 +20,13 @@ ws.onopen = () => {
     //Send params from URL sent by server back to server to Init client player
     var X = parseFloat(params.PosX)
     var Y = parseFloat(params.PosY)
-    ws.send(JSON.stringify({ID:params.ID,Position:{X:X,Y:Y}}))
+    ws.send(JSON.stringify({ID:params.ID,Position:{X:X,Y:Y},Class:params.Class}))
    
     
 }
 
 ws.onmessage = (msg) => {
     serverData = JSON.parse(msg.data)
-
     // Control how many player position server sends and handle it
     setup.AddPlayer(serverData)
     setup.DeletePlayer(serverData)

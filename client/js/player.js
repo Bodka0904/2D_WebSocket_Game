@@ -1,3 +1,4 @@
+
 class Player {
     constructor(name, PosX, PosY, skin, ID) {
         this.ID = ID
@@ -8,8 +9,8 @@ class Player {
 
 
 
-        this.width = this.Skin.width
-        this.height = this.Skin.height
+        this.width = skin.width
+        this.height = skin.height
     }
 
 
@@ -18,7 +19,7 @@ class Player {
         this.PosY = NewY
 
     }
-
+   
     Draw(gl) {
         gl.fillText(this.ID, this.PosX, this.PosY - 1)
         gl.drawImage(this.Skin, this.PosX, this.PosY)

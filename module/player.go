@@ -1,10 +1,12 @@
 package module
 
 type Player struct {
-	ID       string
-	Position Position
-	Velocity Velocity
-	Control  Control
+	ID         string
+	Position   Position
+	Velocity   Velocity
+	Control    Control
+	Class      string
+	Attributes Attributes
 }
 
 type Position struct {
@@ -22,6 +24,12 @@ type Control struct {
 	Left  bool
 	Up    bool
 	Down  bool
+}
+
+type Attributes struct {
+	Attack    int
+	Intellect int
+	Defense   int
 }
 
 func (p *Player) UpdatePosition() {

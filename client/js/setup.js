@@ -1,3 +1,5 @@
+
+
 class Setup {
     constructor() {
         this.gl
@@ -16,14 +18,17 @@ class Setup {
     Load() {
 
         // Skins
-        this.Skin.player = new Image()
-        this.Skin.player.src = "/client/images/player.png"
+        this.Skin.man = new Image()
+        this.Skin.man.src = "/client/images/man.png"
 
         this.Skin.bat = new Image()
         this.Skin.bat.src = "/client/images/bat.png"
 
         this.Skin.warrior = new Image()
         this.Skin.warrior.src = "/client/images/warrior.png"
+
+        this.Skin.wizard = new Image()
+        this.Skin.wizard.src = "/client/images/wizard.png"
 
 
         // Maps
@@ -34,21 +39,46 @@ class Setup {
         this.Map.forest.src = "/client/images/map2.png"
 
     }
+    GetSkin(serverData){
+
+        if (serverData == "goblin")
+        {
+            return this.Skin.goblin
+        }
+        if (serverData == "man")
+        {
+            return this.Skin.man
+        }
+        if (serverData == "wizard")
+        {
+            return this.Skin.wizard
+        }
+        if (serverData == "warrior")
+        {
+            return this.Skin.warrior
+        }
+
+        
+    }
+
 
     DrawMap() {
         this.gl.drawImage(this.Map.forest, 0, 0)
     }
 
     AddPlayer(serverData) {
-        
+     
         if (this.player_list.length == 0) {
             //Add first player - client
-            this.player_list.push(new Player("", 250, 250, "", serverData[serverData.length - 1].ID))
+           
+           
+            this.player_list.push(new Player("", 250, 250, this.GetSkin(serverData[serverData.length - 1].Class), serverData[serverData.length - 1].ID))
             console.log("New player added")
 
             //Add all players that were connected earlier
             for (var i = serverData.length - 2; i >= 0; i--) {
-                this.player_list.push(new Player("", 250, 250, "", serverData[i].ID))
+                
+                this.player_list.push(new Player("", 250, 250, this.GetSkin(serverData[i].Class), serverData[i].ID))
                 console.log("New player added")
             }
 
@@ -56,9 +86,9 @@ class Setup {
             // Wait some time 
             setTimeout(function () {
             }, 50)
-
+            
             //Add new connected players
-            this.player_list.push(new Player("", 250, 250, "", serverData[serverData.length - 1].ID))
+            this.player_list.push(new Player("", 250, 250, this.GetSkin([serverData.length - 1].Class), serverData[serverData.length - 1].ID))
             console.log("New player added")
 
         }

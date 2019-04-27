@@ -1,3 +1,4 @@
+
 function Init(){
     
     setup.InitGL()
@@ -14,7 +15,7 @@ function GameLoop(){
         if (serverData != null && setup.player_list.length != 0) {
 
             for (var i = 0; i < setup.player_list.length; i++) {
-                setup.player_list[i].Skin = setup.Skin.warrior
+              
                 setup.player_list[i].Draw(setup.gl)
             }
         }

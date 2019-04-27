@@ -63,7 +63,7 @@ func (wsClient *WsClient) GetData() {
 func ServeWs(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 
 	}
 
@@ -72,8 +72,9 @@ func ServeWs(w http.ResponseWriter, r *http.Request) {
 	//Get Init message for client Player
 	err = wsClient.Connection.ReadJSON(&wsClient.Player)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
+
 	//Register Client and his player
 	Hubb.RegisterClient(wsClient)
 

@@ -11,22 +11,22 @@ func main() {
 
 	err := db.InitDB()
 	if err != nil {
-		log.Fatal("Can not Init Database: ", err)
+		log.Println("Can not Init Database: ", err)
 	}
 
 	err = db.CreateDbTable(db.Database)
 	if err != nil {
-		log.Fatal("Can not Init Database: ", err)
+		log.Println("Can not Init Database: ", err)
 	}
 	err = db.CreateInventoryTable(db.Database)
 	if err != nil {
-		log.Fatal("Can not create InventoryTable: ", err)
+		log.Println("Can not create InventoryTable: ", err)
 	}
 	err = db.AddToInventory(db.Database, "123", "")
 	if err != nil {
-		log.Fatal("Can not Add To Inventory: ", err)
+		log.Println("Can not Add To Inventory: ", err)
 	}
-	//db.LoginPlayer(db.Database, "test", "test")
+
 	//db.DeleteDbTable(db.Database)
 
 	module.Hubb.Init()

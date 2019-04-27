@@ -27,7 +27,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseForm()
 	if err != nil {
-		log.Fatal("Could not get login information from client")
+		log.Println("Could not get login information from client")
 	}
 	uName := r.FormValue("username")
 	uPassword := r.FormValue("password")
@@ -42,7 +42,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		// Redirect to world after succesfull login and send data about player via url params
 		log.Println("User successfully loged in")
-		http.Redirect(w, r, fmt.Sprintf("/world?ID=%s&PosX=%f&PosY=%f", loginData.ID, loginData.PosX, loginData.PosY), 302)
+		http.Redirect(w, r, fmt.Sprintf("/world?ID=%s&PosX=%f&PosY=%f&Class=%s", loginData.ID, loginData.PosX, loginData.PosY, loginData.Class), 302)
 	}
 }
 
@@ -50,21 +50,22 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
-		log.Fatal("Could not get login information from client")
+		log.Println("Could not get login information from client")
 		http.Redirect(w, r, "/register", 302)
 	}
 	uName := r.FormValue("username")
 	uPassword := r.FormValue("password")
+	uClass := r.FormValue("check")
 
 	if uName == "" || uPassword == "" {
 		http.Redirect(w, r, fmt.Sprintf("./%s/register.html", "/client"), 302)
 	}
 
-	player := db.PlayerInfo{ID: GetToken(10), PosX: 250, PosY: 250}
+	player := db.PlayerInfo{ID: GetToken(10), PosX: 250, PosY: 250, Class: uClass}
 
 	err = db.RegisterPlayer(db.Database, uName, uPassword, player)
 	if err != nil {
-		log.Fatal("Register user failed: ", err)
+		log.Println("Register user failed: ", err)
 		http.Redirect(w, r, "/register", 302)
 	} else {
 		log.Println("User registered")
@@ -98,10 +99,10 @@ func StartAPI() {
 	router.HandleFunc("/registerHandler", RegisterHandler).Methods("POST")
 	router.HandleFunc("/loginHandler", LoginHandler).Methods("POST")
 
-	fmt.Println("Server running on port 3000...")
+	log.Println("Server running on port 3000...")
 	err := http.ListenAndServe(":3000", router)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 
 	}
 

@@ -11,9 +11,10 @@ import (
 )
 
 type PlayerInfo struct {
-	ID   string
-	PosX float64
-	PosY float64
+	ID    string
+	PosX  float64
+	PosY  float64
+	Class string
 }
 
 var Database *sql.DB
@@ -64,6 +65,7 @@ func CreateDbTable(DB *sql.DB) error {
 		"playername" character varying(50),
 		"posx" float DEFAULT 250,
 		"posy" float DEFAULT 250,
+		"class" TEXT NOT NULL,
 		"world" character varying(50)
 	)`)
 	if err != nil {
@@ -79,14 +81,14 @@ func CreateDbTable(DB *sql.DB) error {
 func DeleteDbTable(DB *sql.DB) error {
 	_, err := DB.Exec(`DROP TABLE users`)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return (err)
 	}
 	fmt.Println("Deleted Users")
 
 	_, err = DB.Exec(`DROP TABLE inventory`)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return err
 	}
 	fmt.Println("Deleted inventories")
@@ -98,10 +100,10 @@ func DeleteInventory(DB *sql.DB, ID string) error {
 	query := `DELETE FROM "public"."inventory" WHERE playerid = $1`
 	_, err := DB.Exec(query, ID)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return err
 	}
-	fmt.Println("Inventory of playerid " + ID + " deleted")
+	log.Println("Inventory of playerid " + ID + " deleted")
 	return nil
 }
 
@@ -109,15 +111,15 @@ func RegisterPlayer(DB *sql.DB, username string, password string, player PlayerI
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 8)
 	if err != nil {
-		fmt.Println("Problem with hashing password")
+		log.Println("Problem with hashing password")
 		return err
 	}
 
-	query := `INSERT INTO users(username,password,id) VALUES ($1,$2,$3)`
+	query := `INSERT INTO users(username,password,id,class) VALUES ($1,$2,$3,$4)`
 
-	_, err = DB.Exec(query, username, hashedPassword, player.ID)
+	_, err = DB.Exec(query, username, hashedPassword, player.ID, player.Class)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return err
 	}
 	fmt.Println("Player registered")
@@ -130,31 +132,37 @@ func LoginPlayer(DB *sql.DB, username string, password string) (authorized bool,
 
 	err := DB.QueryRow("SELECT password FROM users WHERE username = $1", username).Scan(&hashed_pass)
 	if err != nil {
-		log.Fatal("Could not parse password")
+		log.Println("Could not parse password")
 		return false, PlayerInfo{}
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(hashed_pass), []byte(password))
 	if err != nil {
-		log.Fatal("Unauthorized")
+		log.Println("Unauthorized")
 		return false, PlayerInfo{}
 	}
 
 	err = DB.QueryRow("SELECT id FROM users WHERE username = $1", username).Scan(&player.ID)
 	if err != nil {
-		log.Fatal("Could not parse id ", err)
+		log.Println("Could not parse id ", err)
 		return false, PlayerInfo{}
 	}
 	err = DB.QueryRow("SELECT posx FROM users WHERE username = $1", username).Scan(&player.PosX)
 	if err != nil {
-		log.Fatal("Could not parse posx", err)
+		log.Println("Could not parse posx", err)
 		return false, PlayerInfo{}
 	}
 	err = DB.QueryRow("SELECT posy FROM users WHERE username = $1", username).Scan(&player.PosY)
 	if err != nil {
-		log.Fatal("Could not parse posy ", err)
+		log.Println("Could not parse posy ", err)
 		return false, PlayerInfo{}
 	}
+	err = DB.QueryRow("SELECT class FROM users WHERE username = $1", username).Scan(&player.Class)
+	if err != nil {
+		log.Println("Could not parse class ", err)
+		return false, PlayerInfo{}
+	}
+
 	return true, player
 
 }
