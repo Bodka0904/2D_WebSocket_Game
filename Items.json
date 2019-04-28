@@ -1,0 +1,19 @@
+[
+    {
+    
+        "Name":"Sword",
+        "Value":4,
+        "Skill":"Attack"
+    },
+    {
+        "Name":"Staff",
+        "Value":4,
+        "Skill":"Intellect"
+    },
+    {
+        "Name":"Shield",
+        "Value":4,
+        "Skill":"Defense"
+    }
+]
+    

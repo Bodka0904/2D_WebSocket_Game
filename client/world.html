@@ -8,6 +8,7 @@
     <title>Document</title>
 
     <!--Create WebSocket connection after client log in and is redirected to the World--> 
+   
     <script>let ws = new WebSocket("ws://localhost:3000/ws")</script> 
     
     <script src="/client/js/main.js"></script>
@@ -18,10 +19,9 @@
 </head>
 
 <body>
-    <canvas id="glCanvas" width="500" height="400"></canvas>
+    <canvas id="glCanvas" width="1000" height="800"></canvas>
 
     <script>
-
         Init()
         GameLoop()
 

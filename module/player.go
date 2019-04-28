@@ -7,6 +7,7 @@ type Player struct {
 	Control    Control
 	Class      string
 	Attributes Attributes
+	Inventory  []Item
 }
 
 type Position struct {
@@ -30,6 +31,12 @@ type Attributes struct {
 	Attack    int
 	Intellect int
 	Defense   int
+}
+
+type Item struct {
+	Name  string
+	Value int
+	Skill string
 }
 
 func (p *Player) UpdatePosition() {

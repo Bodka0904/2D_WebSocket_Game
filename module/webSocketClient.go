@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gido/2D_WebSocket_Game/server/db"
+
 	"github.com/gorilla/websocket"
 )
 
@@ -71,6 +73,10 @@ func ServeWs(w http.ResponseWriter, r *http.Request) {
 
 	//Get Init message for client Player
 	err = wsClient.Connection.ReadJSON(&wsClient.Player)
+	if err != nil {
+		log.Println(err)
+	}
+	err, _ = db.GetInventory(db.Database, wsClient.Player.ID)
 	if err != nil {
 		log.Println(err)
 	}

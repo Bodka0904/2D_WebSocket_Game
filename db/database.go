@@ -51,13 +51,13 @@ func InitDB() (err error) {
 		return err
 	}
 
-	fmt.Println("Successfully connected to database")
+	log.Println("Successfully connected to database")
 
 	return nil
 }
 
 func CreateDbTable(DB *sql.DB) error {
-
+	DB.Exec(`CREATE SCHEMA public;`)
 	_, err := DB.Exec(`CREATE TABLE IF NOT EXISTS "public"."users"(
 		"username" character varying(50) NOT NULL UNIQUE,
 		"password" TEXT NOT NULL,
@@ -73,28 +73,33 @@ func CreateDbTable(DB *sql.DB) error {
 		return err
 
 	}
-	fmt.Println("Players Table Created")
+	log.Println("Players Table Created")
 
 	return nil
 }
 
-func DeleteDbTable(DB *sql.DB) error {
+func DeleteDbTable(DB *sql.DB, ID []string) error {
 	_, err := DB.Exec(`DROP TABLE users`)
 	if err != nil {
 		log.Println(err)
 		return (err)
 	}
-	fmt.Println("Deleted Users")
+	log.Println("Deleted Users")
 
-	_, err = DB.Exec(`DROP TABLE inventory`)
-	if err != nil {
-		log.Println(err)
-		return err
+	for _, v := range ID {
+
+		fmt.Sprintf(`DROP TABLE %s`, v)
+		_, err = DB.Exec(fmt.Sprintf(`DROP TABLE "%s"`, v))
+		if err != nil {
+			log.Println(err)
+			return err
+		}
 	}
-	fmt.Println("Deleted inventories")
+	log.Println("Deleted inventories")
 	return nil
 }
 
+// TODO need update
 func DeleteInventory(DB *sql.DB, ID string) error {
 
 	query := `DELETE FROM "public"."inventory" WHERE playerid = $1`
@@ -122,7 +127,7 @@ func RegisterPlayer(DB *sql.DB, username string, password string, player PlayerI
 		log.Println(err)
 		return err
 	}
-	fmt.Println("Player registered")
+
 	return nil
 }
 
@@ -168,13 +173,18 @@ func LoginPlayer(DB *sql.DB, username string, password string) (authorized bool,
 }
 
 //CreateInventoryTable create new Inventory Table shared accross all players, every slot has ID of player
-func CreateInventoryTable(DB *sql.DB) error {
+func CreateInventoryTable(DB *sql.DB, ID string) error {
 
-	_, err := DB.Exec(`CREATE TABLE IF NOT EXISTS "public"."inventory"(
-		"playerid" character varying(50) NOT NULL,
+	_, err := DB.Exec(fmt.Sprintf(`CREATE SEQUENCE IF NOT EXISTS "public".%s INCREMENT 1 START 1`, ID))
+	if err != nil {
+		return err
+	}
+
+	_, err = DB.Exec(fmt.Sprintf(`CREATE TABLE IF NOT EXISTS "public"."%s"(
+		"id" integer DEFAULT nextval(('"public".%s'::text)) NOT NULL,
 		"slot" character varying(20)
 		
-	)`)
+	)`, ID, ID))
 	if err != nil {
 		return err
 	}
@@ -185,12 +195,37 @@ func CreateInventoryTable(DB *sql.DB) error {
 
 //AddToInventory add new item to inventory , need ID of player, and name of Item
 func AddToInventory(DB *sql.DB, ID string, Item string) error {
-	query := `INSERT INTO inventory(playerid,slot) VALUES ($1, $2)`
+	query := fmt.Sprintf(`INSERT INTO "%s"(slot) VALUES ($1)`, ID)
 
-	_, err := DB.Exec(query, ID, Item)
+	_, err := DB.Exec(query, Item)
 	if err != nil {
 		return err
 	}
 	log.Println("Item: " + Item + " added to inventory of player with ID: " + ID)
 	return nil
+}
+
+func GetInventory(DB *sql.DB, ID string) (err error, items []string) {
+
+	query, err := DB.Prepare(fmt.Sprintf(`SELECT slot FROM "%s"`, ID))
+	if err != nil {
+		return err, nil
+	}
+
+	rows, err := query.Query()
+	defer rows.Close()
+
+	for rows.Next() {
+		var item string
+
+		if err := rows.Scan(&item); err != nil {
+			log.Println(err)
+		}
+		items = append(items, item)
+	}
+
+	fmt.Println(items)
+	log.Println("Player with ID: " + ID + " got inventory from DB")
+	return nil, nil
+
 }

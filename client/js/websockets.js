@@ -2,6 +2,7 @@ let setup = new Setup()
 let serverData = null
 
 
+
 //Function to get params from URL
 function getUrlVars() {
     var vars = {};
