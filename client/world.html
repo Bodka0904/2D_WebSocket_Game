@@ -11,19 +11,51 @@
    
     <script>let ws = new WebSocket("ws://localhost:3000/ws")</script> 
     
+    <script src="/client/js/functions.js"></script>
     <script src="/client/js/main.js"></script>
     <script src="/client/js/setup.js"></script>
     <script src="/client/js/player.js"></script>
     <script src="/client/js/websockets.js"></script>
+    
 
 </head>
 
 <body>
-    <canvas id="glCanvas" width="1000" height="800"></canvas>
+    
+    <div class="canvasContainer">
+            <div class="slot">
+                <p>INVENTORY:</p>
+                <div id="image">
+                    <img src="/client/images/items/emptySlot.png" id="slot1">  
+                    <img src="/client/images/items/emptySlot.png" id="slot2">  
+                    <img src="/client/images/items/emptySlot.png" id="slot3">  
+                    <img src="/client/images/items/emptySlot.png" id="slot4">  
+                    <img src="/client/images/items/emptySlot.png" id="slot5">  
+                    <img src="/client/images/items/emptySlot.png" id="slot6">  
+                    <img src="/client/images/items/emptySlot.png" id="slot7">  
+                    <img src="/client/images/items/emptySlot.png" id="slot8">  
+                    <img src="/client/images/items/emptySlot.png" id="slot9">  
+                    <img src="/client/images/items/emptySlot.png" id="slot10">  
+                    <img src="/client/images/items/emptySlot.png" id="slot11">  
+                    <img src="/client/images/items/emptySlot.png" id="slot12">  
+                    <img src="/client/images/items/emptySlot.png" id="slot13">  
+                    <img src="/client/images/items/emptySlot.png" id="slot14">  
+                    <img src="/client/images/items/emptySlot.png" id="slot15">  
+                    <img src="/client/images/items/emptySlot.png" id="slot16">  
+                    <img src="/client/images/items/emptySlot.png" id="slot17">  
+                    <img src="/client/images/items/emptySlot.png" id="slot18">  
+                    <img src="/client/images/items/emptySlot.png" id="slot19">  
+                    <img src="/client/images/items/emptySlot.png" id="slot20">  
 
+                </div>
+            </div>
+        <canvas id="glCanvas" width="1000" height="800"></canvas>
+    </div>
     <script>
         Init()
+       
         GameLoop()
+        
 
     </script>
 </body>

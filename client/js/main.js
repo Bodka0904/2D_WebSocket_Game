@@ -6,11 +6,14 @@ function Init(){
 }
 
 function GameLoop(){
+    AddItemToInventory(setup.Item.staff,3)
+        
     setInterval(function () {
 
         // Clear Canvas
         setup.gl.clearRect(0, 0, 500, 500)
         setup.DrawMap()
+        
 
         if (serverData != null && setup.player_list.length != 0) {
 

@@ -1,11 +1,12 @@
 
 class Player {
-    constructor(name, PosX, PosY, skin, ID) {
+    constructor(name, PosX, PosY, skin, ID, Inventory) {
         this.ID = ID
         this.name = name
         this.Skin = skin
         this.PosX = PosX
         this.PosY = PosY
+        this.Inventory = Inventory
 
 
 

@@ -6,6 +6,7 @@ const role = {
     wizard:{attack:6,intellect:15,defense:7}
 }
 
+
 // Function that allows check only one checkbox with name check and shows attributes of checked player
 function checkOnlyOne(checkbox) {
     var checkboxes = document.getElementsByName('check')
@@ -36,5 +37,14 @@ function checkOnlyOne(checkbox) {
         }
     })
 
+}
+
+
+function AddItemToInventory(skin,slotNum){
+    document.getElementById("slot"+slotNum).src = skin.src
+}
+
+function DeleteItemFromInventory(slotNum){
+    document.getElementById("slot"+slotNum).src = "/client/images/items/emptySlot.png"
 }
 

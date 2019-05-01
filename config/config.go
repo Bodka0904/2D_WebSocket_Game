@@ -4,12 +4,17 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
-
-	"github.com/gido/2D_WebSocket_Game/server/module"
 )
 
-//ListItems stores information about all Items loaded from Item.json file
-var ListItems []module.Item
+//ConfigItem stores information about all Items loaded from Item.json file
+type ConfigItem struct {
+	Name      string
+	Attack    int
+	Intellect int
+	Defense   int
+}
+
+var Items []ConfigItem
 
 //LoadItems loads Items.json file with information about all items in game
 func LoadItems() error {
@@ -18,7 +23,7 @@ func LoadItems() error {
 		return err
 	}
 
-	err = json.Unmarshal([]byte(file), &ListItems)
+	err = json.Unmarshal([]byte(file), &Items)
 	if err != nil {
 		return err
 	}

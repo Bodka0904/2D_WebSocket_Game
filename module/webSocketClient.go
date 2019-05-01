@@ -5,7 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gido/2D_WebSocket_Game/server/db"
+	"github.com/gido/2D_WebSocket_Game/config"
+	"github.com/gido/2D_WebSocket_Game/db"
 
 	"github.com/gorilla/websocket"
 )
@@ -50,11 +51,13 @@ func (wsClient *WsClient) GetData() {
 		// Reading Commands for movement
 		time.Sleep(25 * time.Millisecond)
 		err := wsClient.Connection.ReadJSON(&wsClient.Player.Control)
+
 		if err != nil {
 			Hubb.UnregisterClient(wsClient)
 			wsClient.Connection.Close()
 			return
 		} else {
+
 			wsClient.Player.UpdatePosition()
 		}
 
@@ -76,9 +79,21 @@ func ServeWs(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
-	err, _ = db.GetInventory(db.Database, wsClient.Player.ID)
+
+	// Load Inventory of Player
+	inv, err := db.GetInventory(db.Database, wsClient.Player.ID)
 	if err != nil {
 		log.Println(err)
+	}
+
+	for _, v := range inv {
+		for _, c := range config.Items {
+			if v == c.Name {
+				// Connect stored names of items in inventory with items from config file
+				wsClient.Player.Inventory = append(wsClient.Player.Inventory, Item{v, c.Attack, c.Intellect, c.Defense})
+
+			}
+		}
 	}
 
 	//Register Client and his player

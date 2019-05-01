@@ -2,18 +2,21 @@
     {
     
         "Name":"Sword",
-        "Value":4,
-        "Skill":"Attack"
+        "Attack":4,
+        "Intellect":0,
+        "Defense":0
     },
     {
         "Name":"Staff",
-        "Value":4,
-        "Skill":"Intellect"
+        "Attack":1,
+        "Intellect":3,
+        "Defense":0
     },
     {
         "Name":"Shield",
-        "Value":4,
-        "Skill":"Defense"
+        "Attack":0,
+        "Intellect":0,
+        "Defense":4
     }
 ]
     

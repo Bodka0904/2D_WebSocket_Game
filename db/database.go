@@ -35,7 +35,19 @@ var DbCfg DbConfig = DbConfig{
 	DbPwd:  "1Qh0RjfU7T!",
 }
 
-func InitDB() (err error) {
+func InitDB() {
+	err := ConnectDB()
+	if err != nil {
+		log.Println("Can not Init Database: ", err)
+	}
+
+	err = CreateDbTable(Database)
+	if err != nil {
+		log.Println("Can not Init Database: ", err)
+	}
+}
+
+func ConnectDB() (err error) {
 
 	connInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", DbCfg.DbHost, DbCfg.DbPort, DbCfg.DbUser, DbCfg.DbPwd, DbCfg.DbName)
 
@@ -78,32 +90,27 @@ func CreateDbTable(DB *sql.DB) error {
 	return nil
 }
 
-func DeleteDbTable(DB *sql.DB, ID []string) error {
-	_, err := DB.Exec(`DROP TABLE users`)
+//DeleteDbSchema delete whole public schema
+func DeleteDbSchema(DB *sql.DB) error {
+	_, err := DB.Exec(`DROP SCHEMA IF EXISTS public cascade`)
 	if err != nil {
 		log.Println(err)
 		return (err)
 	}
-	log.Println("Deleted Users")
-
-	for _, v := range ID {
-
-		fmt.Sprintf(`DROP TABLE %s`, v)
-		_, err = DB.Exec(fmt.Sprintf(`DROP TABLE "%s"`, v))
-		if err != nil {
-			log.Println(err)
-			return err
-		}
-	}
-	log.Println("Deleted inventories")
+	log.Println("Deleted all Users")
 	return nil
+
 }
 
-// TODO need update
+// DeleteInventory delete inventory of specified player
 func DeleteInventory(DB *sql.DB, ID string) error {
 
-	query := `DELETE FROM "public"."inventory" WHERE playerid = $1`
-	_, err := DB.Exec(query, ID)
+	_, err := DB.Exec(fmt.Sprintf(`DROP TABLE "%s"`, ID))
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	_, err = DB.Exec(fmt.Sprintf(`DROP SEQUENCE IF EXISTS "%s"`), ID)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -112,6 +119,7 @@ func DeleteInventory(DB *sql.DB, ID string) error {
 	return nil
 }
 
+// RegisterPlayer register player to the database
 func RegisterPlayer(DB *sql.DB, username string, password string, player PlayerInfo) error {
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 8)
@@ -131,6 +139,7 @@ func RegisterPlayer(DB *sql.DB, username string, password string, player PlayerI
 	return nil
 }
 
+// LoginPlayer after authentication get information about player
 func LoginPlayer(DB *sql.DB, username string, password string) (authorized bool, player PlayerInfo) {
 
 	var hashed_pass string
@@ -193,7 +202,7 @@ func CreateInventoryTable(DB *sql.DB, ID string) error {
 	return nil
 }
 
-//AddToInventory add new item to inventory , need ID of player, and name of Item
+// AddToInventory add new item to inventory , need ID of player, and name of Item
 func AddToInventory(DB *sql.DB, ID string, Item string) error {
 	query := fmt.Sprintf(`INSERT INTO "%s"(slot) VALUES ($1)`, ID)
 
@@ -205,11 +214,12 @@ func AddToInventory(DB *sql.DB, ID string, Item string) error {
 	return nil
 }
 
-func GetInventory(DB *sql.DB, ID string) (err error, items []string) {
+// GetInventory get items from inventory of specified player
+func GetInventory(DB *sql.DB, ID string) (items []string, err error) {
 
 	query, err := DB.Prepare(fmt.Sprintf(`SELECT slot FROM "%s"`, ID))
 	if err != nil {
-		return err, nil
+		return nil, err
 	}
 
 	rows, err := query.Query()
@@ -224,8 +234,7 @@ func GetInventory(DB *sql.DB, ID string) (err error, items []string) {
 		items = append(items, item)
 	}
 
-	fmt.Println(items)
 	log.Println("Player with ID: " + ID + " got inventory from DB")
-	return nil, nil
+	return items, nil
 
 }

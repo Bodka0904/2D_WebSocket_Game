@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gido/2D_WebSocket_Game/server/db"
+	"github.com/gido/2D_WebSocket_Game/db"
 	"github.com/gorilla/mux"
 )
 
@@ -38,7 +38,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	authorized, loginData := db.LoginPlayer(db.Database, uName, uPassword)
 	if !authorized {
-		http.Redirect(w, r, fmt.Sprintf("./%s/login.html", "/client"), 302)
+		http.Redirect(w, r, fmt.Sprintf("/login"), 302)
 	} else {
 		// Redirect to world after succesfull login and send data about player via url params
 		log.Println("User successfully loged in")
@@ -57,19 +57,27 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	uPassword := r.FormValue("password")
 	uClass := r.FormValue("check")
 
-	if uName == "" || uPassword == "" {
-		http.Redirect(w, r, fmt.Sprintf("./%s/register.html", "/client"), 302)
-	}
+	if uName == "" || uPassword == "" || uClass == "" {
+		http.Redirect(w, r, fmt.Sprintf("/register"), 302)
 
-	player := db.PlayerInfo{ID: GetToken(10), PosX: 250, PosY: 250, Class: uClass}
-
-	err = db.RegisterPlayer(db.Database, uName, uPassword, player)
-	if err != nil {
-		log.Println("Register user failed: ", err)
-		http.Redirect(w, r, "/register", 302)
 	} else {
-		log.Println("User registered")
-		http.Redirect(w, r, "/login", 302)
+		player := db.PlayerInfo{ID: GetToken(10), PosX: 250, PosY: 250, Class: uClass}
+
+		// Create Inventory for new Player
+		err = db.CreateInventoryTable(db.Database, player.ID)
+		if err != nil {
+			log.Println("Can not create InventoryTable: ", err)
+		}
+
+		// Register new Player
+		err = db.RegisterPlayer(db.Database, uName, uPassword, player)
+		if err != nil {
+			log.Println("Register user failed: ", err)
+			http.Redirect(w, r, "/register", 302)
+		} else {
+			log.Println("User registered")
+			http.Redirect(w, r, "/login", 302)
+		}
 	}
 
 }
