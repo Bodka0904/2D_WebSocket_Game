@@ -1,0 +1,26 @@
+[
+
+    {   
+        "Name":"Blob",
+        "Friend":false,
+        "HP":10,
+        "Level":2,
+        "Position":{
+            "X":0,
+            "Y":0
+        },
+        "Velocity":{
+            "X":0,
+            "Y":0
+        },
+        "Attributes":{
+            "Attack":1,
+            "Intellect":1,
+            "Defense":2
+        },
+        "XP":10,
+        "Respawn":20
+
+    }
+
+]

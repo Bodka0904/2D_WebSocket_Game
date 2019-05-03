@@ -6,6 +6,10 @@ const role = {
     wizard:{attack:6,intellect:15,defense:7}
 }
 
+let counter = 0
+//It is important to keep track of Number of images
+let TotalImages = 9
+
 
 // Function that allows check only one checkbox with name check and shows attributes of checked player
 function checkOnlyOne(checkbox) {
@@ -47,4 +51,16 @@ function AddItemToInventory(skin,slotNum){
 function DeleteItemFromInventory(slotNum){
     document.getElementById("slot"+slotNum).src = "/client/images/items/emptySlot.png"
 }
+
+let OnloadCallback = function() {
+        
+    counter++
+    if (counter < TotalImages){
+        return;
+    }
+    console.log(counter)
+    setup.Loaded = true;
+ 
+}
+
 

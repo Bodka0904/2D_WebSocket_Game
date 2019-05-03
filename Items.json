@@ -4,19 +4,34 @@
         "Name":"Sword",
         "Attack":4,
         "Intellect":0,
-        "Defense":0
+        "Defense":0,
+        "Level":1,
+        "Position":{
+            "X":0,
+            "Y":0
+        }
     },
     {
         "Name":"Staff",
         "Attack":1,
         "Intellect":3,
-        "Defense":0
+        "Defense":0,
+        "Level":1,
+        "Position":{
+            "X":0,
+            "Y":0
+        }
     },
     {
         "Name":"Shield",
         "Attack":0,
         "Intellect":0,
-        "Defense":4
+        "Defense":4,
+        "Level":1,
+        "Position":{
+            "X":0,
+            "Y":0
+        }
     }
 ]
     

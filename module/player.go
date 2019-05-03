@@ -8,6 +8,7 @@ import (
 
 type Player struct {
 	ID              string
+	HP              int
 	Position        Position
 	Velocity        Velocity
 	Control         Control
@@ -15,48 +16,7 @@ type Player struct {
 	Attributes      Attributes
 	BonusAttributes BonusAttributes
 	Inventory       []Item
-}
-
-type Position struct {
-	X float64
-	Y float64
-}
-
-type Velocity struct {
-	X float64
-	Y float64
-}
-
-type Control struct {
-	Right  bool
-	Left   bool
-	Up     bool
-	Down   bool
-	Attack Attack
-}
-
-type Attributes struct {
-	Attack    int
-	Intellect int
-	Defense   int
-}
-
-type BonusAttributes struct {
-	Attack    int
-	Intellect int
-	Defense   int
-}
-
-type Item struct {
-	Name      string
-	Attack    int
-	Intellect int
-	Defense   int
-}
-type Attack struct {
-	Basic   bool
-	Range   bool
-	Special bool
+	World           *World
 }
 
 func (p *Player) UpdatePosition() {
@@ -73,6 +33,7 @@ func (p *Player) UpdatePosition() {
 	if p.Control.Right {
 		p.Position.X += p.Velocity.X
 	}
+	p.ChangeWorld(WorldList[1])
 
 }
 
@@ -112,4 +73,12 @@ func randString(max int64) int64 {
 		log.Println(err)
 	}
 	return nBig.Int64()
+}
+
+func (p *Player) ChangeWorld(World *World) {
+	if p.Position.X < -20 || p.Position.X > Width+20 || p.Position.Y < -20 || p.Position.Y > Height+20 {
+		p.World = World
+		p.Position.X = Width - p.Position.X
+		p.Position.Y = Height - p.Position.Y
+	}
 }

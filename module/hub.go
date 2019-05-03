@@ -37,6 +37,17 @@ func (h *Hub) GetPlayers() []*Player {
 	}
 	return keys
 }
+func (h *Hub) GetPlayersInWorld(WorldName string) []*Player {
+	keys := make([]*Player, 0, len(h.Clients))
+
+	for k := range h.Clients {
+		if k.Player.World.Name == WorldName {
+			keys = append(keys, &k.Player)
+		}
+
+	}
+	return keys
+}
 
 // RegisterClient ...
 func (h *Hub) RegisterClient(c *WsClient) {

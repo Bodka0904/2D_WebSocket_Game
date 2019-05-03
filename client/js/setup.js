@@ -9,6 +9,9 @@ class Setup {
         this.Map = {}
         this.Item = {}
         this.player_list = []
+        this.creature_list = []
+        this.Loaded = false
+      
     }
     InitGL() {
         this.canvas = document.querySelector("#glCanvas");
@@ -17,37 +20,50 @@ class Setup {
         this.gl.font = '10px Arial';
     }
     Load() {
-
+     
         // Skins
         this.Skin.man = new Image()
+        this.Skin.man.onload = OnloadCallback
         this.Skin.man.src = "/client/images/players/man.png"
-
+        
         this.Skin.warrior = new Image()
+        this.Skin.warrior.onload = OnloadCallback
         this.Skin.warrior.src = "/client/images/players/warrior.png"
 
         this.Skin.wizard = new Image()
+        this.Skin.wizard.onload = OnloadCallback
         this.Skin.wizard.src = "/client/images/players/wizard.png"
 
         this.Skin.goblin = new Image()
+        this.Skin.goblin.onload = OnloadCallback
         this.Skin.goblin.src = "/client/images/players/goblin.png"
 
         // Maps
         this.Map.field = new Image()
+        this.Map.field.onload = OnloadCallback
         this.Map.field.src = "/client/images/maps/map.png"
 
         this.Map.forest = new Image()
+        this.Map.forest.onload = OnloadCallback
         this.Map.forest.src = "/client/images/maps/map2.png"
 
         // Items
         this.Item.shield = new Image()
+        this.Item.shield.onload = OnloadCallback
         this.Item.shield.src = "/client/images/items/shield.png"
 
         this.Item.staff = new Image()
+        this.Item.staff.onload = OnloadCallback
         this.Item.staff.src = "/client/images/items/staff.png"
 
         this.Item.sword = new Image()
+        this.Item.sword.onload = OnloadCallback
         this.Item.sword.src = "/client/images/items/sword.png"
+
+
     }
+   
+
     GetSkin(serverData){
         
         if (serverData == "goblin")
@@ -86,14 +102,14 @@ class Setup {
             //Add first player - client
            
           
-            this.player_list.push(new Player("", 250, 250, this.GetSkin(serverData[serverData.length - 1].Class), serverData[serverData.length - 1].ID,serverData[serverData.length - 1].Inventory))
+            this.player_list.push(new Player("", 250, 250, this.GetSkin(serverData[serverData.length - 1].Class), serverData[serverData.length - 1].ID,serverData[serverData.length - 1].HP,serverData[serverData.length - 1].Inventory))
             console.log("New player added")
             
 
             //Add all players that were connected earlier
             for (var i = serverData.length - 2; i >= 0; i--) {
                 
-                this.player_list.push(new Player("", 250, 250, this.GetSkin(serverData[i].Class), serverData[i].ID))
+                this.player_list.push(new Player("", 250, 250, this.GetSkin(serverData[i].Class), serverData[i].ID,serverData[i].HP,serverData[i].Inventory))
                 console.log("New player added")
             }
 
@@ -103,7 +119,7 @@ class Setup {
             }, 50)
             
             //Add new connected players
-            this.player_list.push(new Player("", 250, 250, this.GetSkin(serverData[serverData.length - 1].Class), serverData[serverData.length - 1].ID))
+            this.player_list.push(new Player("", 250, 250, this.GetSkin(serverData[serverData.length - 1].Class), serverData[serverData.length - 1].ID,serverData[serverData.length - 1].HP,serverData[serverData.length - 1].Inventory))
             console.log("New player added")
 
         }
@@ -127,7 +143,13 @@ class Setup {
         }
 
     }
+    
+    AddCreature(serverData){
 
+    }
+    DeleteCreature(serverData){
+
+    }
 
 
 }

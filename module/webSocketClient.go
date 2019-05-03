@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gido/2D_WebSocket_Game/config"
 	"github.com/gido/2D_WebSocket_Game/db"
 
 	"github.com/gorilla/websocket"
@@ -31,8 +30,8 @@ func (wsClient *WsClient) SendData() {
 
 	for {
 
-		players := Hubb.GetPlayers() //Stores memory addresses of our players
-		time.Sleep(25 * time.Millisecond)
+		players := Hubb.GetPlayersInWorld(wsClient.Player.World.Name) //Stores memory addresses of our players
+		time.Sleep(30 * time.Millisecond)
 
 		err := wsClient.Connection.WriteJSON(players)
 		if err != nil {
@@ -49,9 +48,8 @@ func (wsClient *WsClient) GetData() {
 
 	for {
 		// Reading Commands for movement
-		time.Sleep(25 * time.Millisecond)
+		time.Sleep(30 * time.Millisecond)
 		err := wsClient.Connection.ReadJSON(&wsClient.Player.Control)
-
 		if err != nil {
 			Hubb.UnregisterClient(wsClient)
 			wsClient.Connection.Close()
@@ -72,7 +70,7 @@ func ServeWs(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	wsClient := &WsClient{Connection: conn, Player: Player{ID: "", Position: Position{}, Velocity: Velocity{X: 3, Y: 3}}}
+	wsClient := &WsClient{Connection: conn, Player: Player{ID: "", HP: 20, Position: Position{}, Velocity: Velocity{X: 3, Y: 3}, World: WorldList[0]}}
 
 	//Get Init message for client Player
 	err = wsClient.Connection.ReadJSON(&wsClient.Player)
@@ -87,10 +85,10 @@ func ServeWs(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, v := range inv {
-		for _, c := range config.Items {
+		for _, c := range ItemList {
 			if v == c.Name {
 				// Connect stored names of items in inventory with items from config file
-				wsClient.Player.Inventory = append(wsClient.Player.Inventory, Item{v, c.Attack, c.Intellect, c.Defense})
+				wsClient.Player.Inventory = append(wsClient.Player.Inventory, Item{v, c.Attack, c.Intellect, c.Defense, c.Level, c.Position})
 
 			}
 		}

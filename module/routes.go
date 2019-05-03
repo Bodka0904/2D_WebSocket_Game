@@ -42,6 +42,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		// Redirect to world after succesfull login and send data about player via url params
 		log.Println("User successfully loged in")
+
 		http.Redirect(w, r, fmt.Sprintf("/world?ID=%s&PosX=%f&PosY=%f&Class=%s", loginData.ID, loginData.PosX, loginData.PosY, loginData.Class), 302)
 	}
 }

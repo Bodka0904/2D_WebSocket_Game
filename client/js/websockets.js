@@ -13,6 +13,7 @@ function getUrlVars() {
 }     
 
 
+
 ws.onopen = () => {
 
     console.log("Connected")
@@ -28,12 +29,15 @@ ws.onopen = () => {
 }
 
 ws.onmessage = (msg) => {
-    
+
+    if  (setup.Loaded){ 
+
     serverData = JSON.parse(msg.data)
+   
     // Control how many player position server sends and handle it
     setup.AddPlayer(serverData)
     setup.DeletePlayer(serverData)
-    
+   
     if (setup.player_list.length != 0) {
 
         for (var i = 0; i < setup.player_list.length; i++) {
@@ -52,6 +56,7 @@ ws.onmessage = (msg) => {
     }
 
 
+}
 
 }
 //s
