@@ -5,6 +5,7 @@ class Setup {
         this.gl
         this.canvas
         this.Players
+        this.Sprite = {}
         this.Skin = {}
         this.Map = {}
         this.Item = {}
@@ -20,11 +21,28 @@ class Setup {
         this.gl.font = '10px Arial';
     }
     Load() {
-     
+
+        //Sprites
+        this.Sprite.wizard = new Image()
+        this.Sprite.wizard.onload = OnloadCallback
+        this.Sprite.wizard.src = "/client/images/sprites/wizard_sprite.png"
+
+        this.Sprite.priest = new Image()
+        this.Sprite.priest.onload = OnloadCallback
+        this.Sprite.priest.src = "/client/images/sprites/priest_sprite.png"
+
+        this.Sprite.warrior = new Image()
+        this.Sprite.warrior.onload = OnloadCallback
+        this.Sprite.warrior.src = "/client/images/sprites/warrior_sprite.png"
+
+        this.Sprite.goblin = new Image()
+        this.Sprite.goblin.onload = OnloadCallback
+        this.Sprite.goblin.src = "/client/images/sprites/goblin_sprite.png"
+      
         // Skins
-        this.Skin.man = new Image()
-        this.Skin.man.onload = OnloadCallback
-        this.Skin.man.src = "/client/images/players/man.png"
+        this.Skin.priest = new Image()
+        this.Skin.priest.onload = OnloadCallback
+        this.Skin.priest.src = "/client/images/players/priest.png"
         
         this.Skin.warrior = new Image()
         this.Skin.warrior.onload = OnloadCallback
@@ -62,35 +80,34 @@ class Setup {
 
 
     }
-   
-
+    
     GetSkin(serverData){
         
         if (serverData == "goblin")
         {
           
-            return this.Skin.goblin
+            return this.Sprite.goblin
             
         }
-        if (serverData == "man")
+        if (serverData == "priest")
         {
             
-            return this.Skin.man
+            return this.Sprite.man
         }
         if (serverData == "wizard")
         {
-         
-            return this.Skin.wizard
+            
+            return this.Sprite.wizard
         }
         if (serverData == "warrior")
         {
            
-            return this.Skin.warrior
+            return this.Sprite.warrior
         }
 
         
     }
-
+    
 
     DrawMap() {
         this.gl.drawImage(this.Map.field, 0, 0)

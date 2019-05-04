@@ -1,14 +1,17 @@
+//It is important to keep track of Number of images
+const TotalImages = 13
 
 const role = {
-    man:{attack:10,intellect:8,defense:12},
+    priest:{attack:10,intellect:8,defense:12},
     goblin:{attack:14,intellect:5,defense:10},
     warrior:{attack:12,intellect:8,defense:10},
     wizard:{attack:6,intellect:15,defense:7}
 }
 
+/////////////////////////////////////////////////
+
 let counter = 0
-//It is important to keep track of Number of images
-let TotalImages = 9
+
 
 
 // Function that allows check only one checkbox with name check and shows attributes of checked player
@@ -19,9 +22,9 @@ function checkOnlyOne(checkbox) {
 
         if (item.checked == true) {
             if(item.value == "man"){
-                document.getElementById("attack").innerText = role.man.attack
-                document.getElementById("intellect").innerText = role.man.intellect
-                document.getElementById("defense").innerText = role.man.defense
+                document.getElementById("attack").innerText = role.priest.attack
+                document.getElementById("intellect").innerText = role.priest.intellect
+                document.getElementById("defense").innerText = role.priest.defense
             }
             if(item.value == "goblin"){
                 document.getElementById("attack").innerText = role.goblin.attack
@@ -55,10 +58,11 @@ function DeleteItemFromInventory(slotNum){
 let OnloadCallback = function() {
         
     counter++
+   
     if (counter < TotalImages){
         return;
     }
-    console.log(counter)
+  
     setup.Loaded = true;
  
 }

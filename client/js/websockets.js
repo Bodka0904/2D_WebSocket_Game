@@ -1,4 +1,5 @@
 let setup = new Setup()
+
 let serverData = null
 let ClientID
 
@@ -46,7 +47,7 @@ ws.onmessage = (msg) => {
                 if (setup.player_list[i].ID == serverData[j].ID) {
 
                     // After recieving ID update position for particular ID
-                    setup.player_list[i].UpdateData(serverData[j].Position.X, serverData[j].Position.Y)
+                    setup.player_list[i].UpdateData(serverData[j].Position.X, serverData[j].Position.Y,serverData[j].Control)
 
                 }
             }
@@ -68,15 +69,22 @@ ws.onclose = () => {
 // Control
 document.onkeydown = function (event) {
     // Movement
-    if (event.keyCode == 68)  //d
+    if (event.keyCode == 68) { //d
         ws.send(JSON.stringify({ Right: true }))
-    if (event.keyCode === 83) //s
+       
+    }
+    if (event.keyCode === 83){ //s
         ws.send(JSON.stringify({ Down: true }))
-    if (event.keyCode === 65) //a
+       
+    }
+    if (event.keyCode === 65){ //a
         ws.send(JSON.stringify({ Left: true }))
-    if (event.keyCode === 87) //w
+       
+    }
+    if (event.keyCode === 87) { //w
         ws.send(JSON.stringify({ Up: true }))
-
+    
+    }
     // Attack
     if(event.keyCode === 97)//1
         ws.send(JSON.stringify({Attack:{Basic: true}}))
@@ -90,15 +98,22 @@ document.onkeydown = function (event) {
 }
 document.onkeyup = function (event) {
     // Movement
-    if (event.keyCode == 68) //d
+    if (event.keyCode == 68) { //d
         ws.send(JSON.stringify({ Right: false }))
-    if (event.keyCode === 83) //s
+    
+    }
+    if (event.keyCode === 83){ //s
         ws.send(JSON.stringify({ Down: false }))
-    if (event.keyCode === 65) //a
+        
+    }
+    if (event.keyCode === 65){ //a
         ws.send(JSON.stringify({ Left: false }))
-    if (event.keyCode === 87) //w
+      
+    }
+    if (event.keyCode === 87) { //w
         ws.send(JSON.stringify({ Up: false }))
-
+      
+    }
     // Attack
     if(event.keyCode === 97) //1
         ws.send(JSON.stringify({Attack:{Basic: false}}))

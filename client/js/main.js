@@ -7,7 +7,7 @@ function Init(){
 function GameLoop(){
    
     AddItemToInventory(setup.Item.staff,3)
-        
+  
     setInterval(function () {
         if (setup.Loaded){
     
