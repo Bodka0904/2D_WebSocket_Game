@@ -43,7 +43,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		// Redirect to world after succesfull login and send data about player via url params
 		log.Println("User successfully loged in")
 
-		http.Redirect(w, r, fmt.Sprintf("/world?ID=%s&PosX=%f&PosY=%f&Class=%s", loginData.ID, loginData.PosX, loginData.PosY, loginData.Class), 302)
+		http.Redirect(w, r, fmt.Sprintf("/world?ID=%s&PosX=%f&PosY=%f", loginData.ID, loginData.PosX, loginData.PosY), 302)
 	}
 }
 
@@ -56,13 +56,12 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	uName := r.FormValue("username")
 	uPassword := r.FormValue("password")
-	uClass := r.FormValue("check")
 
-	if uName == "" || uPassword == "" || uClass == "" {
+	if uName == "" || uPassword == "" {
 		http.Redirect(w, r, fmt.Sprintf("/register"), 302)
 
 	} else {
-		player := db.PlayerInfo{ID: GetToken(10), PosX: 250, PosY: 250, Class: uClass}
+		player := db.PlayerInfo{ID: GetToken(10), PosX: 250, PosY: 250}
 
 		// Create Inventory for new Player
 		err = db.CreateInventoryTable(db.Database, player.ID)

@@ -11,10 +11,9 @@ import (
 )
 
 type PlayerInfo struct {
-	ID    string
-	PosX  float64
-	PosY  float64
-	Class string
+	ID   string
+	PosX float64
+	PosY float64
 }
 
 var Database *sql.DB
@@ -77,7 +76,6 @@ func CreateDbTable(DB *sql.DB) error {
 		"playername" character varying(50),
 		"posx" float DEFAULT 250,
 		"posy" float DEFAULT 250,
-		"class" TEXT NOT NULL,
 		"world" character varying(50)
 	)`)
 	if err != nil {
@@ -128,9 +126,9 @@ func RegisterPlayer(DB *sql.DB, username string, password string, player PlayerI
 		return err
 	}
 
-	query := `INSERT INTO users(username,password,id,class) VALUES ($1,$2,$3,$4)`
+	query := `INSERT INTO users(username,password,id) VALUES ($1,$2,$3)`
 
-	_, err = DB.Exec(query, username, hashedPassword, player.ID, player.Class)
+	_, err = DB.Exec(query, username, hashedPassword, player.ID)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -169,11 +167,6 @@ func LoginPlayer(DB *sql.DB, username string, password string) (authorized bool,
 	err = DB.QueryRow("SELECT posy FROM users WHERE username = $1", username).Scan(&player.PosY)
 	if err != nil {
 		log.Println("Could not parse posy ", err)
-		return false, PlayerInfo{}
-	}
-	err = DB.QueryRow("SELECT class FROM users WHERE username = $1", username).Scan(&player.Class)
-	if err != nil {
-		log.Println("Could not parse class ", err)
 		return false, PlayerInfo{}
 	}
 

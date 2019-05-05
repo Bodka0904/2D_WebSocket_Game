@@ -1,13 +1,12 @@
 //It is important to keep track of Number of images
-const TotalImages = 13
+const TotalImages = 6
 
 const role = {
     priest:{attack:10,intellect:8,defense:12},
-    goblin:{attack:14,intellect:5,defense:10},
+    assasin:{attack:14,intellect:5,defense:10},
     warrior:{attack:12,intellect:8,defense:10},
     wizard:{attack:6,intellect:15,defense:7}
 }
-
 /////////////////////////////////////////////////
 
 let counter = 0
@@ -21,7 +20,7 @@ function checkOnlyOne(checkbox) {
         if (item !== checkbox) item.checked = false
 
         if (item.checked == true) {
-            if(item.value == "man"){
+            if(item.value == "priest"){
                 document.getElementById("attack").innerText = role.priest.attack
                 document.getElementById("intellect").innerText = role.priest.intellect
                 document.getElementById("defense").innerText = role.priest.defense
@@ -58,7 +57,7 @@ function DeleteItemFromInventory(slotNum){
 let OnloadCallback = function() {
         
     counter++
-   
+    
     if (counter < TotalImages){
         return;
     }

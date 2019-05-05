@@ -23,38 +23,9 @@ class Setup {
     Load() {
 
         //Sprites
-        this.Sprite.wizard = new Image()
-        this.Sprite.wizard.onload = OnloadCallback
-        this.Sprite.wizard.src = "/client/images/sprites/wizard_sprite.png"
-
-        this.Sprite.priest = new Image()
-        this.Sprite.priest.onload = OnloadCallback
-        this.Sprite.priest.src = "/client/images/sprites/priest_sprite.png"
-
-        this.Sprite.warrior = new Image()
-        this.Sprite.warrior.onload = OnloadCallback
-        this.Sprite.warrior.src = "/client/images/sprites/warrior_sprite.png"
-
-        this.Sprite.goblin = new Image()
-        this.Sprite.goblin.onload = OnloadCallback
-        this.Sprite.goblin.src = "/client/images/sprites/goblin_sprite.png"
-      
-        // Skins
-        this.Skin.priest = new Image()
-        this.Skin.priest.onload = OnloadCallback
-        this.Skin.priest.src = "/client/images/players/priest.png"
-        
-        this.Skin.warrior = new Image()
-        this.Skin.warrior.onload = OnloadCallback
-        this.Skin.warrior.src = "/client/images/players/warrior.png"
-
-        this.Skin.wizard = new Image()
-        this.Skin.wizard.onload = OnloadCallback
-        this.Skin.wizard.src = "/client/images/players/wizard.png"
-
-        this.Skin.goblin = new Image()
-        this.Skin.goblin.onload = OnloadCallback
-        this.Skin.goblin.src = "/client/images/players/goblin.png"
+        this.Sprite.player = new Image()
+        this.Sprite.player.onload = OnloadCallback
+        this.Sprite.player.src = "/client/images/sprites/player_sprite.png"
 
         // Maps
         this.Map.field = new Image()
@@ -81,32 +52,7 @@ class Setup {
 
     }
     
-    GetSkin(serverData){
-        
-        if (serverData == "goblin")
-        {
-          
-            return this.Sprite.goblin
-            
-        }
-        if (serverData == "priest")
-        {
-            
-            return this.Sprite.man
-        }
-        if (serverData == "wizard")
-        {
-            
-            return this.Sprite.wizard
-        }
-        if (serverData == "warrior")
-        {
-           
-            return this.Sprite.warrior
-        }
 
-        
-    }
     
 
     DrawMap() {
@@ -119,14 +65,14 @@ class Setup {
             //Add first player - client
            
           
-            this.player_list.push(new Player("", 250, 250, this.GetSkin(serverData[serverData.length - 1].Class), serverData[serverData.length - 1].ID,serverData[serverData.length - 1].HP,serverData[serverData.length - 1].Inventory))
+            this.player_list.push(new Player("", 250, 250,  this.Sprite.player,serverData[serverData.length - 1].ID,serverData[serverData.length - 1].HP,serverData[serverData.length - 1].Energy,serverData[serverData.length - 1].Inventory))
             console.log("New player added")
             
 
             //Add all players that were connected earlier
             for (var i = serverData.length - 2; i >= 0; i--) {
                 
-                this.player_list.push(new Player("", 250, 250, this.GetSkin(serverData[i].Class), serverData[i].ID,serverData[i].HP,serverData[i].Inventory))
+                this.player_list.push(new Player("", 250, 250,  this.Sprite.player, serverData[i].ID,serverData[i].HP,serverData[i].Energy))
                 console.log("New player added")
             }
 
@@ -136,7 +82,7 @@ class Setup {
             }, 50)
             
             //Add new connected players
-            this.player_list.push(new Player("", 250, 250, this.GetSkin(serverData[serverData.length - 1].Class), serverData[serverData.length - 1].ID,serverData[serverData.length - 1].HP,serverData[serverData.length - 1].Inventory))
+            this.player_list.push(new Player("", 250, 250,  this.Sprite.player, serverData[serverData.length - 1].ID,serverData[serverData.length - 1].HP,serverData[serverData.length - 1].Energy,serverData[serverData.length - 1].Inventory))
             console.log("New player added")
 
         }

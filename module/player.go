@@ -9,17 +9,17 @@ import (
 type Player struct {
 	ID              string
 	HP              int
+	Energy          float64
 	Position        Position
 	Velocity        Velocity
 	Control         Control
-	Class           string
 	Attributes      Attributes
 	BonusAttributes BonusAttributes
 	Inventory       []Item
 	World           *World
 }
 
-func (p *Player) UpdatePosition() {
+func (p *Player) UpdatePlayer() {
 
 	if p.Control.Up {
 		p.Position.Y -= p.Velocity.Y
@@ -34,6 +34,31 @@ func (p *Player) UpdatePosition() {
 		p.Position.X += p.Velocity.X
 	}
 	p.ChangeWorld(WorldList[1])
+
+	if p.Control.Action.Attack {
+		if p.Energy >= 0.5 {
+			p.Energy -= 0.5
+		} else {
+			p.Control.Action.Attack = false
+		}
+	}
+	if p.Control.Action.Mine {
+		if p.Energy >= 1 {
+			p.Energy -= 1
+		} else {
+			p.Control.Action.Mine = false
+		}
+	}
+	if p.Control.Action.Build {
+		if p.Energy >= 3 {
+			p.Energy -= 3
+		} else {
+			p.Control.Action.Build = false
+		}
+	}
+	if p.Energy < 100 {
+		p.Energy++
+	}
 
 }
 

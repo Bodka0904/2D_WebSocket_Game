@@ -56,7 +56,7 @@ func (wsClient *WsClient) GetData() {
 			return
 		} else {
 
-			wsClient.Player.UpdatePosition()
+			wsClient.Player.UpdatePlayer()
 		}
 
 	}
@@ -70,7 +70,7 @@ func ServeWs(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	wsClient := &WsClient{Connection: conn, Player: Player{ID: "", HP: 20, Position: Position{}, Velocity: Velocity{X: 3, Y: 3}, World: WorldList[0]}}
+	wsClient := &WsClient{Connection: conn, Player: Player{ID: "", HP: 20, Energy: 100, Position: Position{}, Velocity: Velocity{X: 3, Y: 3}, World: WorldList[0]}}
 
 	//Get Init message for client Player
 	err = wsClient.Connection.ReadJSON(&wsClient.Player)

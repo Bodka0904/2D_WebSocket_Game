@@ -15,7 +15,7 @@ type Control struct {
 	Left   bool
 	Up     bool
 	Down   bool
-	Attack Attack
+	Action Action
 }
 
 type Attributes struct {
@@ -38,8 +38,8 @@ type Item struct {
 	Level     int
 	Position  Position
 }
-type Attack struct {
-	Basic   bool
-	Range   bool
-	Special bool
+type Action struct {
+	Attack bool
+	Mine   bool
+	Build  bool
 }

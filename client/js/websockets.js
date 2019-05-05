@@ -24,7 +24,7 @@ ws.onopen = () => {
     var X = parseFloat(params.PosX)
     var Y = parseFloat(params.PosY)
     ClientID = params.ID
-    ws.send(JSON.stringify({ID:params.ID,Position:{X:X,Y:Y},Class:params.Class}))
+    ws.send(JSON.stringify({ID:params.ID,Position:{X:X,Y:Y}}))
    
     
 }
@@ -87,11 +87,11 @@ document.onkeydown = function (event) {
     }
     // Attack
     if(event.keyCode === 97)//1
-        ws.send(JSON.stringify({Attack:{Basic: true}}))
+        ws.send(JSON.stringify({Action:{Attack: true}}))
     if(event.keyCode === 98)//2
-        ws.send(JSON.stringify({Attack:{Range: true}}))
+        ws.send(JSON.stringify({Action:{Mine: true}}))
     if(event.keyCode === 99)//3
-        ws.send(JSON.stringify({Attack:{Special: true}}))
+        ws.send(JSON.stringify({Action:{Build: true}}))
     
 
     
@@ -116,11 +116,11 @@ document.onkeyup = function (event) {
     }
     // Attack
     if(event.keyCode === 97) //1
-        ws.send(JSON.stringify({Attack:{Basic: false}}))
+        ws.send(JSON.stringify({Action:{Attack: false}}))
     if(event.keyCode === 98)//2
-        ws.send(JSON.stringify({Attack:{Range: false}}))
+        ws.send(JSON.stringify({Action:{Mine: false}}))
     if(event.keyCode === 99)//3
-        ws.send(JSON.stringify({Attack:{Special: false}}))
+        ws.send(JSON.stringify({Action:{Build: false}}))
     
 }
 
