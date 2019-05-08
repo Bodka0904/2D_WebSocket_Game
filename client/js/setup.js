@@ -10,7 +10,7 @@ class Setup {
         this.Map = {}
         this.Item = {}
         this.player_list = []
-        this.creature_list = []
+        this.world_list = []
         this.Loaded = false
       
     }
@@ -107,11 +107,15 @@ class Setup {
 
     }
     
-    AddCreature(serverData){
-
+    AddWorlds(serverData){
+   
+        for (var i = 0 ; i < serverData.length; i++){
+            this.world_list.push(serverData[i])
+        }
+      
     }
     DeleteCreature(serverData){
-
+        
     }
 
 

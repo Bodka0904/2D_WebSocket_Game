@@ -29,37 +29,40 @@ class Player {
 
     }
 
-    UpdateData(NewX, NewY,Control) {
-        this.PosX = NewX
-        this.PosY = NewY
+    UpdateData(serverData) {
+        this.PosX = serverData.Position.X
+        this.PosY = serverData.Position.Y
 
-        this.Control.Up = Control.Up
-        this.Control.Down = Control.Down
-        this.Control.Right = Control.Right
-        this.Control.Left = Control.Left
+        this.Control.Up = serverData.Control.Up
+        this.Control.Down = serverData.Control.Down
+        this.Control.Right = serverData.Control.Right
+        this.Control.Left = serverData.Control.Left
 
-        this.Control.Action.Attack = Control.Action.Attack
-        this.Control.Action.Mine = Control.Action.Mine
-        this.Control.Action.Build = Control.Action.Build
+        this.Control.Action.Attack = serverData.Control.Action.Attack
+        this.Control.Action.Mine = serverData.Control.Action.Mine
+        this.Control.Action.Build = serverData.Control.Action.Build
 
-        if (Control.Right){
+        this.Inventory = serverData.Inventory
+        
+
+        if (serverData.Control.Right){
             this.Rotate.Right = true
             this.Rotate.Left = false
         }
-        if (Control.Left){
+        if (serverData.Control.Left){
             this.Rotate.Left = true
             this.Rotate.Right = false
         }
 
-        if (Control.Action.Attack){
+        if (serverData.Control.Action.Attack){
             this.Control.Action.Mine = false
             this.Control.Action.Build = false
         }
-        if (Control.Action.Mine){
+        if (serverData.Control.Action.Mine){
             this.Control.Action.Attack = false
             this.Control.Action.Build = false 
         }
-        if (Control.Action.Build){
+        if (serverData.Control.Action.Build){
             this.Control.Action.Attack = false
             this.Control.Action.Mine = false  
         }
@@ -86,18 +89,20 @@ class Player {
         else if (this.Control.Down){
             this.Sprite.Animate(gl,this.PosX,this.PosY,this.Sprite.frames[4],this.Sprite.frames[5],2)
         }
-        else if (this.Control.Action.Attack){ //Need draw this action
-            this.Sprite.Animate(gl,this.PosX,this.PosY,this.Sprite.frames[4],this.Sprite.frames[5],2)
-        }
         else if (this.Control.Action.Mine) {
-            
             if (this.Rotate.Left){
                 this.Sprite.Animate(gl,this.PosX,this.PosY,this.Sprite.frames[19],this.Sprite.frames[18],2)
             } else if (this.Rotate.Right){
                 this.Sprite.Animate(gl,this.PosX,this.PosY,this.Sprite.frames[16],this.Sprite.frames[17],2)
             }
         }
-
+        else if (this.Control.Action.Attack){
+            if (this.Rotate.Left){
+                this.Sprite.Animate(gl,this.PosX,this.PosY,this.Sprite.frames[15],this.Sprite.frames[14],2)
+            } else if (this.Rotate.Right){
+                this.Sprite.Animate(gl,this.PosX,this.PosY,this.Sprite.frames[12],this.Sprite.frames[13],2)
+            }
+        }
         
         
         

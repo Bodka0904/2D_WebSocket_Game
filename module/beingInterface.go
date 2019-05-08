@@ -42,4 +42,7 @@ type Action struct {
 	Attack bool
 	Mine   bool
 	Build  bool
+
+	Pick bool
+	Drop bool
 }

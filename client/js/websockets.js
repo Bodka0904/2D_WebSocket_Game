@@ -1,6 +1,7 @@
 let setup = new Setup()
 
 let serverData = null
+let ClientInited = false
 let ClientID
 
 
@@ -32,9 +33,16 @@ ws.onopen = () => {
 ws.onmessage = (msg) => {
 
     if  (setup.Loaded){ 
-
+        
     serverData = JSON.parse(msg.data)
-   
+  
+
+    if (!ClientInited){
+        setup.AddWorlds(serverData)
+        ClientInited = true
+
+    } else {
+        
     // Control how many player position server sends and handle it
     setup.AddPlayer(serverData)
     setup.DeletePlayer(serverData)
@@ -47,7 +55,7 @@ ws.onmessage = (msg) => {
                 if (setup.player_list[i].ID == serverData[j].ID) {
 
                     // After recieving ID update position for particular ID
-                    setup.player_list[i].UpdateData(serverData[j].Position.X, serverData[j].Position.Y,serverData[j].Control)
+                    setup.player_list[i].UpdateData(serverData[j])
 
                 }
             }
@@ -56,7 +64,7 @@ ws.onmessage = (msg) => {
 
     }
 
-
+    }
 }
 
 }

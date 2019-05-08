@@ -107,3 +107,9 @@ func (p *Player) ChangeWorld(World *World) {
 		p.Position.Y = Height - p.Position.Y
 	}
 }
+
+func (p *Player) PickItem() {
+	if p.Control.Action.Pick{		
+		if p.Position.X <= 
+	}
+}

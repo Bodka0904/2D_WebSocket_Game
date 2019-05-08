@@ -17,11 +17,22 @@ type World struct {
 	Name      string
 	Level     int
 	Creatures []Creature
+	Resources []Resource
+	Players   []Player
+
+	//Add copies of players that are in same world as client keep track of them and send world via wsClient.Player.World with creatures and Resources in it
+}
+
+type Resource struct {
+	Name     string
+	Capacity int
+	Rare     int
+	Respawn  int
+	Position Position
 }
 
 type Creature struct {
 	Name       string
-	ID         string
 	Level      int
 	Friend     bool
 	HP         int
@@ -32,6 +43,9 @@ type Creature struct {
 	Inventory  []Item
 	Respawn    int //Seconds
 }
+
+//ResourceList list of all avaiable Resources
+var ResourceList []Resource
 
 // CreatureList list of all avaiable Creatures
 var CreatureList []Creature
@@ -56,9 +70,13 @@ func Init() {
 	if err != nil {
 		log.Println(err)
 	}
+	err = LoadResources()
+	if err != nil {
+		log.Println(err)
+	}
 	for _, v := range WorldList {
-		v.GenerateCreatures(v.Level)
-
+		v.GenerateCreatures()
+		v.GenerateResources()
 	}
 	for _, v := range CreatureList {
 		v.GenerateItems()
@@ -116,16 +134,44 @@ func LoadCreatures() error {
 	return nil
 }
 
-func (w *World) GenerateCreatures(level int) {
+func (w *World) GenerateCreatures() {
 
 	for _, v := range CreatureList {
 		if v.Level <= w.Level {
-			v.ID = GetToken(15)
 
 			w.Creatures = append(w.Creatures, v)
 
 		}
 	}
+}
+func (w *World) GenerateResources() {
+
+	rand.Seed(time.Now().UnixNano())
+	min := 50
+	max := 750
+
+	for _, v := range ResourceList {
+		for i := 0; i < v.Rare; i++ {
+
+			v.Position.X = float64(rand.Intn(max-min) + min)
+			v.Position.Y = float64(rand.Intn(max-min) + min)
+			w.Resources = append(w.Resources, v)
+		}
+	}
+}
+
+func LoadResources() error {
+	file, err := ioutil.ReadFile("Resources.json")
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal([]byte(file), &ResourceList)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func LoadWorlds() error {

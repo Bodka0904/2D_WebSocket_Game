@@ -23,23 +23,27 @@ var upgrader = websocket.Upgrader{
 type WsClient struct {
 	Connection *websocket.Conn
 	Player     Player
+	Init       bool `default:false`
 }
 
 //SendData Every Client sends data about every registered player
 func (wsClient *WsClient) SendData() {
 
 	for {
+		if !wsClient.Init {
+			wsClient.Connection.WriteJSON(WorldList)
+			wsClient.Init = true
+		} else {
+			players := Hubb.GetPlayersInWorld(wsClient.Player.World.Name) //Stores memory addresses of our players
+			time.Sleep(30 * time.Millisecond)
 
-		players := Hubb.GetPlayersInWorld(wsClient.Player.World.Name) //Stores memory addresses of our players
-		time.Sleep(30 * time.Millisecond)
-
-		err := wsClient.Connection.WriteJSON(players)
-		if err != nil {
-			Hubb.UnregisterClient(wsClient)
-			wsClient.Connection.Close()
-			return
+			err := wsClient.Connection.WriteJSON(players)
+			if err != nil {
+				Hubb.UnregisterClient(wsClient)
+				wsClient.Connection.Close()
+				return
+			}
 		}
-
 	}
 }
 
