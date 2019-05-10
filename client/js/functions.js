@@ -1,5 +1,5 @@
 //It is important to keep track of Number of images
-const TotalImages = 6
+const TotalImages = 12
 
 const role = {
     priest:{attack:10,intellect:8,defense:12},
@@ -42,6 +42,17 @@ function checkOnlyOne(checkbox) {
             }
         }
     })
+
+}
+
+function SelectItem(id,num){
+   
+    var item = document.getElementById("item")
+    item.src = id.src
+    
+
+    ws.send(JSON.stringify({Action:{SelectedItem: num}}))
+    
 
 }
 

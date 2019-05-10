@@ -238,3 +238,17 @@ body{
   width:50px;
 }
 
+.item {
+  float:left;
+  border-bottom:3px solid grey;
+  border-style:inset; 
+  margin-left:120px;
+  margin-top: 150px;
+  width:100px;
+  height:100px;
+}
+.item img {
+  width:100px;
+  height:100px;
+}
+

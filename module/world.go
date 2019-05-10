@@ -18,9 +18,8 @@ type World struct {
 	Level     int
 	Creatures []Creature
 	Resources []Resource
-	Players   []Player
-
-	//Add copies of players that are in same world as client keep track of them and send world via wsClient.Player.World with creatures and Resources in it
+	Objects   []Object
+	Items     []Item
 }
 
 type Resource struct {
@@ -28,6 +27,7 @@ type Resource struct {
 	Capacity int
 	Rare     int
 	Respawn  int
+	Alive    bool
 	Position Position
 }
 
@@ -40,9 +40,19 @@ type Creature struct {
 	Velocity   Velocity
 	Attributes Attributes
 	XP         int
-	Inventory  []Item
 	Respawn    int //Seconds
 }
+
+type Object struct {
+	Name     string
+	HP       int
+	Position Position
+	Width    int
+	Height   int
+}
+
+var testObj Object
+var testItem Item
 
 //ResourceList list of all avaiable Resources
 var ResourceList []Resource
@@ -58,6 +68,7 @@ var WorldList []*World
 
 //Init init world configuration
 func Init() {
+
 	err := LoadItems()
 	if err != nil {
 		log.Println(err)
@@ -75,11 +86,11 @@ func Init() {
 		log.Println(err)
 	}
 	for _, v := range WorldList {
+		v.Objects = append(v.Objects, testObj)
+		v.Items = append(v.Items, testItem)
 		v.GenerateCreatures()
 		v.GenerateResources()
-	}
-	for _, v := range CreatureList {
-		v.GenerateItems()
+		v.DropItems()
 	}
 
 }
@@ -98,7 +109,7 @@ func LoadItems() error {
 	return nil
 }
 
-func (c *Creature) GenerateItems() {
+func (w *World) GenerateItems() {
 
 	rand.Seed(time.Now().UnixNano())
 	num := 3
@@ -109,15 +120,26 @@ func (c *Creature) GenerateItems() {
 		num = len(ItemList)
 		randomNum := rand.Intn(num)
 
-		c.Inventory = append(c.Inventory, ItemList[randomNum])
+		w.Items = append(w.Items, ItemList[randomNum])
 	}
 
 }
 
-func (c *Creature) DropItems() {
-	for _, v := range c.Inventory {
-		v.Position = c.Position
+func (w *World) DropItems() {
+	for _, c := range w.Creatures {
+		if c.HP == 0 {
+
+			w.GenerateItems()
+			for _, v := range w.Items {
+				v.Drop = true
+				v.Position = c.Position
+			}
+			c.RespawnTimer()
+		}
 	}
+}
+func (c *Creature) RespawnTimer() {
+	//Make timer
 }
 
 func LoadCreatures() error {
@@ -147,8 +169,8 @@ func (w *World) GenerateCreatures() {
 func (w *World) GenerateResources() {
 
 	rand.Seed(time.Now().UnixNano())
-	min := 50
-	max := 750
+	min := 0
+	max := Width
 
 	for _, v := range ResourceList {
 		for i := 0; i < v.Rare; i++ {
@@ -158,6 +180,7 @@ func (w *World) GenerateResources() {
 			w.Resources = append(w.Resources, v)
 		}
 	}
+
 }
 
 func LoadResources() error {

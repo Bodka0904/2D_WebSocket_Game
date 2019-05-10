@@ -9,7 +9,8 @@
         "Position":{
             "X":0,
             "Y":0
-        }
+        },
+        "Type":"Weapon"
     },
     {
         "Name":"Staff",
@@ -20,7 +21,8 @@
         "Position":{
             "X":0,
             "Y":0
-        }
+        },
+        "Type":"Weapon"
     },
     {
         "Name":"Shield",
@@ -31,7 +33,22 @@
         "Position":{
             "X":0,
             "Y":0
-        }
+        },
+        "Type":"Weapon"
+    },
+    {
+        "Name":"Wood",
+        "Attack":0,
+        "Intellect":0,
+        "Defense":0,
+        "Level":1,
+        "Position":{
+            "X":0,
+            "Y":0
+        },
+        "Type":"Material",
+        "Width":20,
+        "Height":20
     }
 ]
     

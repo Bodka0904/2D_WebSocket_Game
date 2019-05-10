@@ -2,14 +2,16 @@
     {
         "Name":"Tree",
         "Capacity":5,
-        "Rare":20,
+        "Rare":200,
         "Respawn":60
+        
     },
     {
         "Name":"Stone",
         "Capacity":4,
         "Rare":3,
         "Respawn":60
+      
     }
 ]
     

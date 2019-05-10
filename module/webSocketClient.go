@@ -23,26 +23,24 @@ var upgrader = websocket.Upgrader{
 type WsClient struct {
 	Connection *websocket.Conn
 	Player     Player
-	Init       bool `default:false`
 }
 
 //SendData Every Client sends data about every registered player
 func (wsClient *WsClient) SendData() {
 
+	//wsClient.Player.World.Players = Hubb.GetPlayersInWorld(wsClient.Player.World.Name)
+	//fmt.Println(wsClient.Player.World.Players[0])
 	for {
-		if !wsClient.Init {
-			wsClient.Connection.WriteJSON(WorldList)
-			wsClient.Init = true
-		} else {
-			players := Hubb.GetPlayersInWorld(wsClient.Player.World.Name) //Stores memory addresses of our players
-			time.Sleep(30 * time.Millisecond)
 
-			err := wsClient.Connection.WriteJSON(players)
-			if err != nil {
-				Hubb.UnregisterClient(wsClient)
-				wsClient.Connection.Close()
-				return
-			}
+		players := Hubb.GetPlayersInWorld(wsClient.Player.World.Name) //Stores memory addresses of our players
+		time.Sleep(30 * time.Millisecond)
+
+		err := wsClient.Connection.WriteJSON(players)
+		if err != nil {
+			Hubb.UnregisterClient(wsClient)
+			wsClient.Connection.Close()
+			return
+
 		}
 	}
 }
@@ -92,7 +90,7 @@ func ServeWs(w http.ResponseWriter, r *http.Request) {
 		for _, c := range ItemList {
 			if v == c.Name {
 				// Connect stored names of items in inventory with items from config file
-				wsClient.Player.Inventory = append(wsClient.Player.Inventory, Item{v, c.Attack, c.Intellect, c.Defense, c.Level, c.Position})
+				wsClient.Player.Inventory = append(wsClient.Player.Inventory, Item{v, c.Attack, c.Intellect, c.Defense, c.Level, c.Position, false, c.Type, c.Width, c.Height})
 
 			}
 		}

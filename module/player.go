@@ -14,6 +14,8 @@ type Player struct {
 	Velocity        Velocity
 	Control         Control
 	Attributes      Attributes
+	Face            string `default:"Right"`
+	BuildMode       bool
 	BonusAttributes BonusAttributes
 	Inventory       []Item
 	World           *World
@@ -23,42 +25,53 @@ func (p *Player) UpdatePlayer() {
 
 	if p.Control.Up {
 		p.Position.Y -= p.Velocity.Y
+		p.Face = "Up"
 	}
 	if p.Control.Down {
 		p.Position.Y += p.Velocity.Y
+		p.Face = "Down"
 	}
 	if p.Control.Left {
 		p.Position.X -= p.Velocity.X
+		p.Face = "Left"
 	}
 	if p.Control.Right {
 		p.Position.X += p.Velocity.X
+		p.Face = "Right"
 	}
 	p.ChangeWorld(WorldList[1])
 
 	if p.Control.Action.Attack {
-		if p.Energy >= 0.5 {
-			p.Energy -= 0.5
+		if p.Energy >= 2 {
+			p.Energy -= 2
+			p.BuildMode = false
+
 		} else {
 			p.Control.Action.Attack = false
 		}
 	}
 	if p.Control.Action.Mine {
-		if p.Energy >= 1 {
-			p.Energy -= 1
+		if p.Energy >= 2 {
+			p.Energy -= 2
+			p.BuildMode = false
 		} else {
 			p.Control.Action.Mine = false
 		}
 	}
 	if p.Control.Action.Build {
-		if p.Energy >= 3 {
-			p.Energy -= 3
+		if p.Energy >= 10 {
+			p.Build()
+			p.Energy -= 10
 		} else {
 			p.Control.Action.Build = false
+			p.BuildMode = false
 		}
 	}
 	if p.Energy < 100 {
-		p.Energy++
+		p.Energy += 0.5
 	}
+
+	p.PickItem()
 
 }
 
@@ -109,7 +122,46 @@ func (p *Player) ChangeWorld(World *World) {
 }
 
 func (p *Player) PickItem() {
-	if p.Control.Action.Pick{		
-		if p.Position.X <= 
+	if p.Control.Action.Pick {
+		for v := 0; v < len(p.World.Items); v++ {
+			if p.Position.X <= (p.World.Items[v].Position.X+5) && p.World.Items[v].Position.X >= (p.World.Items[v].Position.X-5) && p.World.Items[v].Position.Y <= (p.World.Items[v].Position.Y+5) && p.Position.Y >= (p.World.Items[v].Position.Y-5) {
+				p.Inventory = append(p.Inventory, p.World.Items[v])
+				p.World.Items = append(p.World.Items[:v], p.World.Items[v+1:]...)
+			}
+		}
+	}
+}
+
+func (p *Player) Build() {
+	p.Inventory = append(p.Inventory, ItemList[3]) //DELETE
+
+	p.BuildMode = true
+
+	if p.Control.Action.Build {
+		if p.Face == "Up" {
+			if p.Inventory[p.Control.Action.SelectedItem].Type == "Material" {
+				p.World.Objects = append(p.World.Objects, Object{p.Inventory[p.Control.Action.SelectedItem].Name, 10, Position{p.Position.X + 5, p.Position.Y - 15}, p.Inventory[p.Control.Action.SelectedItem].Width, p.Inventory[p.Control.Action.SelectedItem].Height})
+				p.Inventory = append(p.Inventory[:p.Control.Action.SelectedItem], p.Inventory[p.Control.Action.SelectedItem+1:]...)
+			}
+		}
+		if p.Face == "Down" {
+			if p.Inventory[p.Control.Action.SelectedItem].Type == "Material" {
+				p.World.Objects = append(p.World.Objects, Object{p.Inventory[p.Control.Action.SelectedItem].Name, 10, Position{p.Position.X + 5, p.Position.Y + 30}, p.Inventory[p.Control.Action.SelectedItem].Width, p.Inventory[p.Control.Action.SelectedItem].Height})
+				p.Inventory = append(p.Inventory[:p.Control.Action.SelectedItem], p.Inventory[p.Control.Action.SelectedItem+1:]...)
+			}
+		}
+		if p.Face == "Right" {
+			if p.Inventory[p.Control.Action.SelectedItem].Type == "Material" {
+				p.World.Objects = append(p.World.Objects, Object{p.Inventory[p.Control.Action.SelectedItem].Name, 10, Position{p.Position.X + 25, p.Position.Y + 5}, p.Inventory[p.Control.Action.SelectedItem].Width, p.Inventory[p.Control.Action.SelectedItem].Height})
+				p.Inventory = append(p.Inventory[:p.Control.Action.SelectedItem], p.Inventory[p.Control.Action.SelectedItem+1:]...)
+			}
+		}
+		if p.Face == "Left" {
+			if p.Inventory[p.Control.Action.SelectedItem].Type == "Material" {
+
+				p.World.Objects = append(p.World.Objects, Object{p.Inventory[p.Control.Action.SelectedItem].Name, 10, Position{p.Position.X - 15, p.Position.Y + 5}, p.Inventory[p.Control.Action.SelectedItem].Width, p.Inventory[p.Control.Action.SelectedItem].Height})
+				p.Inventory = append(p.Inventory[:p.Control.Action.SelectedItem], p.Inventory[p.Control.Action.SelectedItem+1:]...)
+			}
+		}
 	}
 }

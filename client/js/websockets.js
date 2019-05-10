@@ -1,8 +1,7 @@
 let setup = new Setup()
 
+
 let serverData = null
-let ClientInited = false
-let ClientID
 
 
 //Function to get params from URL
@@ -24,7 +23,7 @@ ws.onopen = () => {
     //Send params from URL sent by server back to server to Init client player
     var X = parseFloat(params.PosX)
     var Y = parseFloat(params.PosY)
-    ClientID = params.ID
+    
     ws.send(JSON.stringify({ID:params.ID,Position:{X:X,Y:Y}}))
    
     
@@ -34,38 +33,12 @@ ws.onmessage = (msg) => {
 
     if  (setup.Loaded){ 
         
-    serverData = JSON.parse(msg.data)
-  
-
-    if (!ClientInited){
-        setup.AddWorlds(serverData)
-        ClientInited = true
-
-    } else {
-        
-    // Control how many player position server sends and handle it
-    setup.AddPlayer(serverData)
-    setup.DeletePlayer(serverData)
+        serverData = JSON.parse(msg.data)
    
-    if (setup.player_list.length != 0) {
+        setup.world.UpdateData(serverData)
 
-        for (var i = 0; i < setup.player_list.length; i++) {
-            for (var j = 0; j < serverData.length; j++) {
-
-                if (setup.player_list[i].ID == serverData[j].ID) {
-
-                    // After recieving ID update position for particular ID
-                    setup.player_list[i].UpdateData(serverData[j])
-
-                }
-            }
-        }
-
-
+    
     }
-
-    }
-}
 
 }
 //s
@@ -100,7 +73,8 @@ document.onkeydown = function (event) {
         ws.send(JSON.stringify({Action:{Mine: true}}))
     if(event.keyCode === 99)//3
         ws.send(JSON.stringify({Action:{Build: true}}))
-    
+    if (event.keyCode === 100) //4
+        ws.send(JSON.stringify({Action:{Pick: true}}))
 
     
 }
@@ -129,7 +103,8 @@ document.onkeyup = function (event) {
         ws.send(JSON.stringify({Action:{Mine: false}}))
     if(event.keyCode === 99)//3
         ws.send(JSON.stringify({Action:{Build: false}}))
-    
+    if (event.keyCode === 100) //4
+        ws.send(JSON.stringify({Action:{Pick: false}}))
 }
 
 window.ws = ws

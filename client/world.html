@@ -13,9 +13,9 @@
     
     <script src="/client/js/functions.js"></script>
     <script src="/client/js/setup.js"></script>
+    <script src="/client/js/world.js"></script>
     <script src="/client/js/sprite.js"></script>
     <script src="/client/js/main.js"></script>
-    <script src="/client/js/player.js"></script>
     <script src="/client/js/websockets.js"></script>
     
 
@@ -27,29 +27,33 @@
             <div class="slot">
                 <p>INVENTORY:</p>
                 <div id="image">
-                    <img src="/client/images/items/emptySlot.png" id="slot1">  
-                    <img src="/client/images/items/emptySlot.png" id="slot2">  
-                    <img src="/client/images/items/emptySlot.png" id="slot3">  
-                    <img src="/client/images/items/emptySlot.png" id="slot4">  
-                    <img src="/client/images/items/emptySlot.png" id="slot5">  
-                    <img src="/client/images/items/emptySlot.png" id="slot6">  
-                    <img src="/client/images/items/emptySlot.png" id="slot7">  
-                    <img src="/client/images/items/emptySlot.png" id="slot8">  
-                    <img src="/client/images/items/emptySlot.png" id="slot9">  
-                    <img src="/client/images/items/emptySlot.png" id="slot10">  
-                    <img src="/client/images/items/emptySlot.png" id="slot11">  
-                    <img src="/client/images/items/emptySlot.png" id="slot12">  
-                    <img src="/client/images/items/emptySlot.png" id="slot13">  
-                    <img src="/client/images/items/emptySlot.png" id="slot14">  
-                    <img src="/client/images/items/emptySlot.png" id="slot15">  
-                    <img src="/client/images/items/emptySlot.png" id="slot16">  
-                    <img src="/client/images/items/emptySlot.png" id="slot17">  
-                    <img src="/client/images/items/emptySlot.png" id="slot18">  
-                    <img src="/client/images/items/emptySlot.png" id="slot19">  
-                    <img src="/client/images/items/emptySlot.png" id="slot20">  
-
+                    <img src="/client/images/items/emptySlot.png" id="slot1" onclick="SelectItem(slot1,0)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot2" onclick="SelectItem(slot2,1)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot3" onclick="SelectItem(slot3,2)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot4" onclick="SelectItem(slot4,3)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot5" onclick="SelectItem(slot5,4)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot6" onclick="SelectItem(slot6,5)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot7" onclick="SelectItem(slot7,6)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot8" onclick="SelectItem(slot8,7)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot9" onclick="SelectItem(slot9,8)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot10" onclick="SelectItem(slot10,9)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot11" onclick="SelectItem(slot11,10)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot12" onclick="SelectItem(slot12,11)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot13" onclick="SelectItem(slot13,12)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot14" onclick="SelectItem(slot14,13)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot15" onclick="SelectItem(slot15,14)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot16" onclick="SelectItem(slot16,15)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot17" onclick="SelectItem(slot17,16)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot18" onclick="SelectItem(slot18,17)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot19" onclick="SelectItem(slot19,18)">  
+                    <img src="/client/images/items/emptySlot.png" id="slot20" onclick="SelectItem(slot20,19)">  
+            
+                    <div class="item">
+                        <img src="/client/images/items/emptySlot.png" id="item"> 
+                    </div>
                 </div>
             </div>
+            
         <canvas id="glCanvas" width="1000" height="800"></canvas>
     </div>
     <script>

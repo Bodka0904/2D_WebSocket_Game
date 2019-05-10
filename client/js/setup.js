@@ -1,31 +1,36 @@
 
-
 class Setup {
     constructor() {
         this.gl
         this.canvas
-        this.Players
         this.Sprite = {}
         this.Skin = {}
         this.Map = {}
         this.Item = {}
-        this.player_list = []
-        this.world_list = []
+        this.Resource = {}
+        this.Img = {}
         this.Loaded = false
+        this.world = new World(this.Sprite.player)
       
     }
     InitGL() {
         this.canvas = document.querySelector("#glCanvas");
         this.gl = this.canvas.getContext("2d");
-
         this.gl.font = '10px Arial';
     }
     Load() {
+
+        //Img
+        this.Img.BuildMode = new Image()
+        this.Img.BuildMode.onload = OnloadCallback
+        this.Img.BuildMode.src = "/client/images/items/build_mode.png"
 
         //Sprites
         this.Sprite.player = new Image()
         this.Sprite.player.onload = OnloadCallback
         this.Sprite.player.src = "/client/images/sprites/player_sprite.png"
+        /////////////////////////////////////
+        this.world = new World(this.Sprite.player) 
 
         // Maps
         this.Map.field = new Image()
@@ -48,75 +53,31 @@ class Setup {
         this.Item.sword = new Image()
         this.Item.sword.onload = OnloadCallback
         this.Item.sword.src = "/client/images/items/sword.png"
-
-
-    }
-    
-
-    
-
-    DrawMap() {
-        this.gl.drawImage(this.Map.field, 0, 0)
-    }
-
-    AddPlayer(serverData) {
-     
-        if (this.player_list.length == 0) {
-            //Add first player - client
-           
-          
-            this.player_list.push(new Player("", 250, 250,  this.Sprite.player,serverData[serverData.length - 1].ID,serverData[serverData.length - 1].HP,serverData[serverData.length - 1].Energy,serverData[serverData.length - 1].Inventory))
-            console.log("New player added")
-            
-
-            //Add all players that were connected earlier
-            for (var i = serverData.length - 2; i >= 0; i--) {
-                
-                this.player_list.push(new Player("", 250, 250,  this.Sprite.player, serverData[i].ID,serverData[i].HP,serverData[i].Energy))
-                console.log("New player added")
-            }
-
-        } else if (serverData.length > this.player_list.length) {
-            // Wait some time 
-            setTimeout(function () {
-            }, 50)
-            
-            //Add new connected players
-            this.player_list.push(new Player("", 250, 250,  this.Sprite.player, serverData[serverData.length - 1].ID,serverData[serverData.length - 1].HP,serverData[serverData.length - 1].Energy,serverData[serverData.length - 1].Inventory))
-            console.log("New player added")
-
-        }
-
-    }
-
-
-    DeletePlayer(serverData) {
-
-        if (serverData.length < this.player_list.length) {
-            for (var j = 0; j < this.player_list.length; j++) {
-                for (var i = 0; i < serverData.length; i++) {
-                    if (this.player_list[j].ID != serverData[i].ID) {
-
-                        this.player_list.splice(j, 1)
-                        console.log("Player deleted")
-                    }
-
-                }
-            }
-        }
-
-    }
-    
-    AddWorlds(serverData){
-   
-        for (var i = 0 ; i < serverData.length; i++){
-            this.world_list.push(serverData[i])
-        }
-      
-    }
-    DeleteCreature(serverData){
         
+        this.Item.wood = new Image()
+        this.Item.wood.onload = OnloadCallback
+        this.Item.wood.src = "/client/images/material/wood.png"
+
+        this.Item.gravel = new Image()
+        this.Item.gravel.onload = OnloadCallback
+        this.Item.gravel.src = "/client/images/material/gravel.png"
+
+        this.Item.stone = new Image()
+        this.Item.stone.onload = OnloadCallback
+        this.Item.stone.src = "/client/images/material/stone.png"
+
+        //Resources
+        this.Resource.tree = new Image()
+        this.Resource.tree.onload = OnloadCallback
+        this.Resource.tree.src = "/client/images/sources/tree.png"
+
+        this.Resource.stone = new Image()
+        this.Resource.stone.onload = OnloadCallback
+        this.Resource.stone.src = "/client/images/sources/stone.png"
+
+       
     }
+    
 
 
 }

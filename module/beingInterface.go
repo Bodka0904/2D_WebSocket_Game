@@ -37,12 +37,17 @@ type Item struct {
 	Defense   int
 	Level     int
 	Position  Position
+	Drop      bool
+	Type      string
+	Width     int `default:0`
+	Height    int `default:0`
 }
 type Action struct {
 	Attack bool
 	Mine   bool
 	Build  bool
 
-	Pick bool
-	Drop bool
+	Pick         bool
+	Drop         bool
+	SelectedItem int
 }
