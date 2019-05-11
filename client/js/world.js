@@ -39,7 +39,7 @@ class World {
 
     DrawWorld(gl,MapSkin,Items,Resources,Img){
 
-        gl.clearRect(0, 0, 500, 500)
+        gl.clearRect(0, 0, 1000, 800)
 
         gl.drawImage(MapSkin,0,0)
 
@@ -68,8 +68,10 @@ class World {
         }
 
         for (var i = 0; i < this.players.length; i++){
+           
             gl.fillText(this.players[i].ID, this.players[i].Position.X, this.players[i].Position.Y - 1)
             
+
             if (this.players[i].Control.Right){
                 this.Sprite.Animate(gl,this.players[i].Position.X,this.players[i].Position.Y,this.Sprite.frames[8],this.Sprite.frames[9],2)
             }
@@ -112,16 +114,16 @@ class World {
             if (this.players[i].BuildMode == true){
                 
                 if (this.players[i].Face == "Up"){
-                    gl.drawImage(Img.BuildMode,this.players[i].Position.X + 5, this.players[i].Position.Y - 15)
+                    gl.drawImage(Img.BuildMode,this.players[i].Position.X + 5, this.players[i].Position.Y - 20)
                 }
                 if (this.players[i].Face == "Down"){
-                    gl.drawImage(Img.BuildMode,this.players[i].Position.X + 5 , this.players[i].Position.Y + 30)
+                    gl.drawImage(Img.BuildMode,this.players[i].Position.X + 5 , this.players[i].Position.Y + 35)
                 }
                 if (this.players[i].Face == "Right"){
-                    gl.drawImage(Img.BuildMode,this.players[i].Position.X + 25 , this.players[i].Position.Y + 5)
+                    gl.drawImage(Img.BuildMode,this.players[i].Position.X + 35 , this.players[i].Position.Y + 10)
                 }
                 if (this.players[i].Face == "Left"){
-                    gl.drawImage(Img.BuildMode,this.players[i].Position.X - 15, this.players[i].Position.Y + 5)
+                    gl.drawImage(Img.BuildMode,this.players[i].Position.X - 20, this.players[i].Position.Y + 10)
                 }
             }
 

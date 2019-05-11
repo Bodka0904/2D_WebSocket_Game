@@ -28,11 +28,10 @@ type WsClient struct {
 //SendData Every Client sends data about every registered player
 func (wsClient *WsClient) SendData() {
 
-	//wsClient.Player.World.Players = Hubb.GetPlayersInWorld(wsClient.Player.World.Name)
-	//fmt.Println(wsClient.Player.World.Players[0])
 	for {
 
 		players := Hubb.GetPlayersInWorld(wsClient.Player.World.Name) //Stores memory addresses of our players
+
 		time.Sleep(30 * time.Millisecond)
 
 		err := wsClient.Connection.WriteJSON(players)

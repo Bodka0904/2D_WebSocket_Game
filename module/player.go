@@ -3,6 +3,7 @@ package module
 import (
 	"crypto/rand"
 	"log"
+	"math"
 	"math/big"
 )
 
@@ -72,6 +73,7 @@ func (p *Player) UpdatePlayer() {
 	}
 
 	p.PickItem()
+	p.Collision()
 
 }
 
@@ -140,28 +142,91 @@ func (p *Player) Build() {
 	if p.Control.Action.Build {
 		if p.Face == "Up" {
 			if p.Inventory[p.Control.Action.SelectedItem].Type == "Material" {
-				p.World.Objects = append(p.World.Objects, Object{p.Inventory[p.Control.Action.SelectedItem].Name, 10, Position{p.Position.X + 5, p.Position.Y - 15}, p.Inventory[p.Control.Action.SelectedItem].Width, p.Inventory[p.Control.Action.SelectedItem].Height})
+				p.World.Objects = append(p.World.Objects, Object{p.Inventory[p.Control.Action.SelectedItem].Name, 10, Position{p.Position.X + 5, p.Position.Y - 20}, p.Inventory[p.Control.Action.SelectedItem].Width, p.Inventory[p.Control.Action.SelectedItem].Height})
 				p.Inventory = append(p.Inventory[:p.Control.Action.SelectedItem], p.Inventory[p.Control.Action.SelectedItem+1:]...)
 			}
 		}
 		if p.Face == "Down" {
 			if p.Inventory[p.Control.Action.SelectedItem].Type == "Material" {
-				p.World.Objects = append(p.World.Objects, Object{p.Inventory[p.Control.Action.SelectedItem].Name, 10, Position{p.Position.X + 5, p.Position.Y + 30}, p.Inventory[p.Control.Action.SelectedItem].Width, p.Inventory[p.Control.Action.SelectedItem].Height})
+				p.World.Objects = append(p.World.Objects, Object{p.Inventory[p.Control.Action.SelectedItem].Name, 10, Position{p.Position.X + 5, p.Position.Y + 35}, p.Inventory[p.Control.Action.SelectedItem].Width, p.Inventory[p.Control.Action.SelectedItem].Height})
 				p.Inventory = append(p.Inventory[:p.Control.Action.SelectedItem], p.Inventory[p.Control.Action.SelectedItem+1:]...)
 			}
 		}
 		if p.Face == "Right" {
 			if p.Inventory[p.Control.Action.SelectedItem].Type == "Material" {
-				p.World.Objects = append(p.World.Objects, Object{p.Inventory[p.Control.Action.SelectedItem].Name, 10, Position{p.Position.X + 25, p.Position.Y + 5}, p.Inventory[p.Control.Action.SelectedItem].Width, p.Inventory[p.Control.Action.SelectedItem].Height})
+				p.World.Objects = append(p.World.Objects, Object{p.Inventory[p.Control.Action.SelectedItem].Name, 10, Position{p.Position.X + 35, p.Position.Y + 10}, p.Inventory[p.Control.Action.SelectedItem].Width, p.Inventory[p.Control.Action.SelectedItem].Height})
 				p.Inventory = append(p.Inventory[:p.Control.Action.SelectedItem], p.Inventory[p.Control.Action.SelectedItem+1:]...)
 			}
 		}
 		if p.Face == "Left" {
 			if p.Inventory[p.Control.Action.SelectedItem].Type == "Material" {
 
-				p.World.Objects = append(p.World.Objects, Object{p.Inventory[p.Control.Action.SelectedItem].Name, 10, Position{p.Position.X - 15, p.Position.Y + 5}, p.Inventory[p.Control.Action.SelectedItem].Width, p.Inventory[p.Control.Action.SelectedItem].Height})
+				p.World.Objects = append(p.World.Objects, Object{p.Inventory[p.Control.Action.SelectedItem].Name, 10, Position{p.Position.X - 20, p.Position.Y + 10}, p.Inventory[p.Control.Action.SelectedItem].Width, p.Inventory[p.Control.Action.SelectedItem].Height})
 				p.Inventory = append(p.Inventory[:p.Control.Action.SelectedItem], p.Inventory[p.Control.Action.SelectedItem+1:]...)
 			}
+		}
+	}
+}
+
+func (p *Player) Collision() {
+	for _, o := range p.World.Objects {
+
+		if math.Abs((p.Position.X+10)-(o.Position.X+5)) < 20 && math.Abs((p.Position.Y+15)-(o.Position.Y+10)) < 20 {
+			X := math.Abs(p.Position.X) - o.Position.X
+			Y := math.Abs(p.Position.Y) - o.Position.Y
+
+			if X > 0 {
+				p.Position.X += 4
+				p.Velocity.X = 0
+				p.Velocity.Y = 0
+			} else {
+				p.Position.X -= 4
+				p.Velocity.X = 0
+				p.Velocity.Y = 0
+			}
+			if Y > 0 {
+				p.Position.Y += 4
+				p.Velocity.X = 0
+				p.Velocity.Y = 0
+			} else {
+				p.Position.Y -= 4
+				p.Velocity.X = 0
+				p.Velocity.Y = 0
+			}
+
+		} else {
+			p.Velocity.X = 3
+			p.Velocity.Y = 3
+		}
+	}
+	for _, r := range p.World.Resources {
+
+		if math.Abs((p.Position.X+10)-(r.Position.X+5)) < 20 && math.Abs((p.Position.Y+15)-(r.Position.Y+10)) < 20 {
+			X := math.Abs(p.Position.X) - r.Position.X
+			Y := math.Abs(p.Position.Y) - r.Position.Y
+
+			if X > 0 {
+				p.Position.X += 4
+				p.Velocity.X = 0
+				p.Velocity.Y = 0
+			} else {
+				p.Position.X -= 4
+				p.Velocity.X = 0
+				p.Velocity.Y = 0
+			}
+			if Y > 0 {
+				p.Position.Y += 4
+				p.Velocity.X = 0
+				p.Velocity.Y = 0
+			} else {
+				p.Position.Y -= 4
+				p.Velocity.X = 0
+				p.Velocity.Y = 0
+			}
+
+		} else {
+			p.Velocity.X = 3
+			p.Velocity.Y = 3
 		}
 	}
 }

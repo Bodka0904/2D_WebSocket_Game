@@ -2,16 +2,17 @@ package module
 
 import (
 	"log"
+	"sort"
 )
 
 //Hub holds all Clients
 type Hub struct {
-	Clients map[*WsClient]bool
+	Clients map[*WsClient]int
 }
 
 //Init inits Hub client map
 func (h *Hub) Init() {
-	h.Clients = make(map[*WsClient]bool)
+	h.Clients = make(map[*WsClient]int)
 }
 
 var Hubb = &Hub{}
@@ -30,37 +31,61 @@ func (h *Hub) GetClients() []*WsClient {
 // GetPlayers get array of all players
 func (h *Hub) GetPlayers() []*Player {
 	keys := make([]*Player, 0, len(h.Clients))
+	hack := map[int]*Player{}
 
-	for k := range h.Clients {
-		keys = append(keys, &k.Player)
+	hackkeys := []int{}
+
+	for key, val := range h.Clients {
+
+		hack[val] = &key.Player
+		hackkeys = append(hackkeys, val)
 
 	}
+	sort.Ints(hackkeys)
+
+	for _, val := range hackkeys {
+
+		keys = append(keys, hack[val])
+	}
+
 	return keys
 }
+
 func (h *Hub) GetPlayersInWorld(WorldName string) []*Player {
 	keys := make([]*Player, 0, len(h.Clients))
+	hack := map[int]*Player{}
 
-	for k := range h.Clients {
-		if k.Player.World.Name == WorldName {
-			keys = append(keys, &k.Player)
+	hackkeys := []int{}
+
+	for key, val := range h.Clients {
+		if key.Player.World.Name == WorldName {
+
+			hack[val] = &key.Player
+			hackkeys = append(hackkeys, val)
 		}
-
 	}
+	sort.Ints(hackkeys)
+
+	for _, val := range hackkeys {
+
+		keys = append(keys, hack[val])
+	}
+
 	return keys
 }
 
 // RegisterClient ...
 func (h *Hub) RegisterClient(c *WsClient) {
-	h.Clients[c] = true
+	h.Clients[c] = len(h.Clients)
+
 	log.Println("New client registered ", c.Connection.RemoteAddr())
 }
 
 // UnregisterClient ...
 func (h *Hub) UnregisterClient(c *WsClient) {
-	_, ok := h.Clients[c]
-	if ok == true {
-		delete(h.Clients, c)
-		log.Println("Client unregistered ", c.Connection.RemoteAddr())
-	}
+
+	delete(h.Clients, c)
+	log.Println("Client unregistered ", c.Connection.RemoteAddr())
+
 	return
 }
