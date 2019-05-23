@@ -31,7 +31,7 @@ var DbCfg DbConfig = DbConfig{
 	DbPort: "5432",
 	DbName: "postgres",
 	DbUser: "postgres",
-	DbPwd:  "1Qh0RjfU7T!",
+	DbPwd:  "123",
 }
 
 func InitDB() {
